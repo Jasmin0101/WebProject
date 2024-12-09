@@ -47,56 +47,64 @@ class _ApplicationWidgetState extends State<ApplicationWidget> {
             );
           }
 
-          return ListView.separated(
-            separatorBuilder: (context, index) => const Divider(height: 24),
-            itemCount: _myApplications!.length,
-            itemBuilder: (context, index) {
-              final application = _myApplications![index];
-              return ListTile(
-                title: Row(
-                  children: [
-                    Expanded(
-                      child: Text(application['title'] == null ||
-                              application['title'] == ""
-                          ? 'Нет заголовка'
-                          : application['title']),
-                    ),
-                    Chip(
-                      label: Text(
-                        switch (application["status"]) {
-                          "SEND" => "Отправленно",
-                          "RECEIVED" => "Получено",
-                          "READ" => "Прочитано",
-                          "REJECTED" => "Отклонено",
-                          _ => "Без статуса",
-                        },
+          return RefreshIndicator(
+            onRefresh: _fetchMyApplication,
+            child: ListView.separated(
+              separatorBuilder: (context, index) => const Divider(height: 24),
+              itemCount: _myApplications!.length,
+              itemBuilder: (context, index) {
+                final application = _myApplications![index];
+                return ListTile(
+                  title: Row(
+                    children: [
+                      Expanded(
+                        child: Text(
+                          application['title'] == null ||
+                                  application['title'] == ""
+                              ? 'Нет заголовка'
+                              : application['title'],
+                          style: Theme.of(context).textTheme.titleLarge,
+                        ),
                       ),
-                    ),
-                  ],
-                ),
-                subtitle: Padding(
-                  padding: const EdgeInsets.only(top: 8),
-                  child: Text(
+                      Chip(
+                        label: Text(
+                          switch (application["status"]) {
+                            "SEND" => "Отправленно",
+                            "RECEIVED" => "Получено",
+                            "READ" => "Прочитано",
+                            "REJECTED" => "Отклонено",
+                            _ => "Без статуса",
+                          },
+                        ),
+                      ),
+                    ],
+                  ),
+                  subtitle: Padding(
+                    padding: const EdgeInsets.only(top: 8),
+                    child: Text(
                       application['text'] == null || application['text'] == ""
                           ? 'Нет описания'
-                          : application['text']),
-                ),
-                isThreeLine: true,
-                onTap: application['status'] != "SEND"
-                    ? null
-                    : () async {
-                        final wasEdited =
-                            await ApplicationEditDialog.showApplicationDialog(
-                          context,
-                          application,
-                        );
+                          : application['text'],
+                      style: Theme.of(context).textTheme.labelMedium,
+                    ),
+                  ),
+                  isThreeLine: true,
+                  onTap: application['status'] != "SEND"
+                      ? null
+                      : () async {
+                          final wasEdited =
+                              await ApplicationEditDialog.showApplicationDialog(
+                            context,
+                            application,
+                          );
 
-                        if (wasEdited == true && context.mounted) {
-                          _fetchMyApplication();
-                        }
-                      },
-              );
-            },
+                          if (wasEdited == true && context.mounted) {
+                            _fetchMyApplication();
+                          }
+                        },
+                );
+              },
+            ),
           );
         },
       ),
