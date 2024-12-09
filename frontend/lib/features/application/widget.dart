@@ -47,21 +47,41 @@ class _ApplicationWidgetState extends State<ApplicationWidget> {
             );
           }
 
-          return ListView.builder(
+          return ListView.separated(
+            separatorBuilder: (context, index) => const Divider(height: 24),
             itemCount: _myApplications!.length,
             itemBuilder: (context, index) {
               final application = _myApplications![index];
               return ListTile(
-                trailing: Chip(
-                    label: Text(switch (application["status"]) {
-                  "SEND" => "Отправленно",
-                  "RECEIVED" => "Получено",
-                  "READ" => "Прочитано",
-                  "REJECTED" => "Отклонено",
-                  _ => "Без статуса",
-                })),
-                title: Text(application['title'] ?? 'Нет заголовка'),
-                subtitle: Text(application['text'] ?? 'Нет описания'),
+                title: Row(
+                  children: [
+                    Expanded(
+                      child: Text(application['title'] == null ||
+                              application['title'] == ""
+                          ? 'Нет заголовка'
+                          : application['title']),
+                    ),
+                    Chip(
+                      label: Text(
+                        switch (application["status"]) {
+                          "SEND" => "Отправленно",
+                          "RECEIVED" => "Получено",
+                          "READ" => "Прочитано",
+                          "REJECTED" => "Отклонено",
+                          _ => "Без статуса",
+                        },
+                      ),
+                    ),
+                  ],
+                ),
+                subtitle: Padding(
+                  padding: const EdgeInsets.only(top: 8),
+                  child: Text(
+                      application['text'] == null || application['text'] == ""
+                          ? 'Нет описания'
+                          : application['text']),
+                ),
+                isThreeLine: true,
                 onTap: application['status'] != "SEND"
                     ? null
                     : () async {

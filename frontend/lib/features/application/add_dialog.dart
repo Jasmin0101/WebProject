@@ -10,7 +10,7 @@ class ApplicationAddDialog extends StatefulWidget {
       context: context,
       isScrollControlled: true, // Для адаптации под клавиатуру
       isDismissible: false,
-      builder: (_) => ApplicationAddDialog(),
+      builder: (_) => const ApplicationAddDialog(),
     );
   }
 
@@ -38,17 +38,24 @@ class _ApplicationAddDialogState extends State<ApplicationAddDialog> {
             'Создание заявки',
             style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
           ),
-          SizedBox(height: 10),
+          const SizedBox(height: 10),
           TextField(
             controller: _titleController,
-            decoration: InputDecoration(labelText: 'Заголовок'),
+            decoration: const InputDecoration(
+              labelText: 'Заголовок',
+              border: OutlineInputBorder(),
+            ),
           ),
+          const SizedBox(height: 16),
           TextField(
             controller: _textController,
-            decoration: InputDecoration(labelText: 'Содержание'),
+            decoration: const InputDecoration(
+              labelText: 'Содержание',
+              border: OutlineInputBorder(),
+            ),
             maxLines: 4,
           ),
-          SizedBox(height: 10),
+          const SizedBox(height: 10),
           Row(
             mainAxisAlignment: MainAxisAlignment.end,
             children: [
@@ -58,7 +65,7 @@ class _ApplicationAddDialogState extends State<ApplicationAddDialog> {
                   onPressed: () {
                     Navigator.of(context).pop(false);
                   },
-                  child: Text('Отмена'),
+                  child: const Text('Отмена'),
                 ),
               ),
               Padding(
@@ -75,7 +82,7 @@ class _ApplicationAddDialogState extends State<ApplicationAddDialog> {
                     } catch (e) {}
                     if (context.mounted) Navigator.of(context).pop(true);
                   },
-                  child: Text('Отправить'),
+                  child: const Text('Отправить'),
                 ),
               ),
             ],

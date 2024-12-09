@@ -25,12 +25,11 @@ class ApplicationEditDialog extends StatefulWidget {
 }
 
 class _ApplicationEditDialogState extends State<ApplicationEditDialog> {
-  late final _titleController;
-  late final _textController;
+  late final TextEditingController _titleController;
+  late final TextEditingController _textController;
 
   @override
   void initState() {
-    // TODO: implement initState
     _titleController = TextEditingController(text: widget.application['title']);
     _textController = TextEditingController(text: widget.application['text']);
 
@@ -53,17 +52,24 @@ class _ApplicationEditDialogState extends State<ApplicationEditDialog> {
             'Редактирование заявки',
             style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
           ),
-          SizedBox(height: 10),
+          const SizedBox(height: 10),
           TextField(
             controller: _titleController,
-            decoration: InputDecoration(labelText: 'Заголовок'),
+            decoration: const InputDecoration(
+              labelText: 'Заголовок',
+              border: OutlineInputBorder(),
+            ),
           ),
+          const SizedBox(height: 16),
           TextField(
             controller: _textController,
-            decoration: InputDecoration(labelText: 'Содержание'),
+            decoration: const InputDecoration(
+              labelText: 'Содержание',
+              border: OutlineInputBorder(),
+            ),
             maxLines: 4,
           ),
-          SizedBox(height: 10),
+          const SizedBox(height: 10),
           Row(
             mainAxisAlignment: MainAxisAlignment.end,
             children: [
@@ -73,7 +79,7 @@ class _ApplicationEditDialogState extends State<ApplicationEditDialog> {
                   onPressed: () {
                     Navigator.of(context).pop(false);
                   },
-                  child: Text('Отмена'),
+                  child: const Text('Отмена'),
                 ),
               ),
               Padding(
@@ -90,9 +96,10 @@ class _ApplicationEditDialogState extends State<ApplicationEditDialog> {
                           .getService<ApplicationService>()
                           .myApplicationEdit(title, text, id);
                     } catch (e) {}
+
                     if (context.mounted) Navigator.of(context).pop(true);
                   },
-                  child: Text('Отправить'),
+                  child: const Text('Отправить'),
                 ),
               ),
             ],
