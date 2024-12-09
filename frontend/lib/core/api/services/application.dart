@@ -19,6 +19,13 @@ abstract class ApplicationService extends ChopperService {
     @Query('status') String? status, // Параметр для фильтрации по статусу
   });
 
+  @Post(path: '/application/my/edit')
+  Future<Response> myApplicationEdit(
+    @Field('title') String title,
+    @Field('text') String text,
+    @Field('id') int id,
+  );
+
   @Get(path: '/application/my/view')
   Future<Response> myApplicationView();
 

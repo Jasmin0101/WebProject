@@ -31,16 +31,16 @@ class User(models.Model):
 class Application(models.Model):
 
     STATUS_CHOICE = {
-        "SENT": "Отправленно",
-        "RECEIVED": "Получено",
+        "SEND": "Отправленно",
         "READ": "Прочитано",
+        "RECEIVED": "Получено",
         "REJECTED": "Отклонено",
     }
 
     status = models.CharField(
         max_length=30,
         choices=STATUS_CHOICE,
-        default="SENT",
+        default="SEND",
     )
 
     id = models.BigAutoField(primary_key=True)

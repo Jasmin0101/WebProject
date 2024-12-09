@@ -1,7 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_application_1/core/city.dart';
 import 'package:flutter_application_1/core/token.dart';
-import 'package:flutter_application_1/features/application/application.dart';
+import 'package:flutter_application_1/features/application/widget.dart';
 import 'package:flutter_application_1/navigation/queries_name.dart';
 import 'package:flutter_application_1/pages/account.dart';
 import 'package:flutter_application_1/pages/application.dart';

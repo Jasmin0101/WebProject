@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_application_1/core/api/chopper.dart';
 import 'package:flutter_application_1/core/api/services/application.dart';
-import 'package:flutter_application_1/features/application/dialog.dart';
+import 'package:flutter_application_1/features/application/add_dialog.dart';
+import 'package:flutter_application_1/features/application/edit_dialog.dart';
 
 class ApplicationWidget extends StatefulWidget {
   const ApplicationWidget({super.key});
@@ -11,15 +12,16 @@ class ApplicationWidget extends StatefulWidget {
 }
 
 class _ApplicationWidgetState extends State<ApplicationWidget> {
-  List<Map>? _myapplications = null;
+  // ignore: avoid_init_to_null
+  List<Map>? _myApplications = null;
 
   Future<void> _fetchMyApplication() async {
     try {
-      _myapplications = null;
+      _myApplications = null;
       setState(() {});
-      final myapplication =
+      final myApplication =
           await api.getService<ApplicationService>().myApplicationView();
-      _myapplications = List<Map>.from(myapplication.body);
+      _myApplications = List<Map>.from(myApplication.body);
       setState(() {});
     } catch (_) {}
   }
@@ -35,26 +37,44 @@ class _ApplicationWidgetState extends State<ApplicationWidget> {
     return Scaffold(
       body: Builder(
         builder: (context) {
-          if (_myapplications == null) {
-            return const Center(child: const CircularProgressIndicator());
+          if (_myApplications == null) {
+            return const Center(child: CircularProgressIndicator());
           }
 
-          if (_myapplications!.isEmpty) {
+          if (_myApplications!.isEmpty) {
             return const Center(
               child: Text("У вас пока не было заявок"),
             );
           }
 
           return ListView.builder(
-            itemCount: _myapplications!.length,
+            itemCount: _myApplications!.length,
             itemBuilder: (context, index) {
-              final application = _myapplications![index];
+              final application = _myApplications![index];
               return ListTile(
+                trailing: Chip(
+                    label: Text(switch (application["status"]) {
+                  "SEND" => "Отправленно",
+                  "RECEIVED" => "Получено",
+                  "READ" => "Прочитано",
+                  "REJECTED" => "Отклонено",
+                  _ => "Без статуса",
+                })),
                 title: Text(application['title'] ?? 'Нет заголовка'),
                 subtitle: Text(application['text'] ?? 'Нет описания'),
-                onTap: () {
-                  // Действие при нажатии на элемент списка
-                },
+                onTap: application['status'] != "SEND"
+                    ? null
+                    : () async {
+                        final wasEdited =
+                            await ApplicationEditDialog.showApplicationDialog(
+                          context,
+                          application,
+                        );
+
+                        if (wasEdited == true && context.mounted) {
+                          _fetchMyApplication();
+                        }
+                      },
               );
             },
           );
@@ -63,7 +83,7 @@ class _ApplicationWidgetState extends State<ApplicationWidget> {
       floatingActionButton: FloatingActionButton(
         onPressed: () async {
           final wasAdded =
-              await ApplicationDialog.showApplicationDialog(context);
+              await ApplicationAddDialog.showApplicationDialog(context);
 
           if (wasAdded == true && context.mounted) {
             _fetchMyApplication();

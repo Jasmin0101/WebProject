@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_application_1/features/application/application.dart';
+import 'package:flutter_application_1/features/application/widget.dart';
 
 class ApplicationPage extends StatefulWidget {
   const ApplicationPage({super.key});

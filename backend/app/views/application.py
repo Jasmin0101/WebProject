@@ -2,18 +2,13 @@ import json
 from django.http import (
     HttpRequest,
     HttpResponseBadRequest,
-    HttpResponseNotAllowed,
     JsonResponse,
     HttpResponse,
 )
 from django.views.decorators.csrf import csrf_exempt
-from django.contrib.auth.hashers import check_password, make_password
 from app.decorator import require_login
 from app.models import *
 
-from rest_framework_simplejwt.tokens import RefreshToken, AccessToken
-from rest_framework.decorators import api_view, permission_classes
-from rest_framework.permissions import IsAuthenticated
 from django.views.decorators.http import require_http_methods
 
 
@@ -76,3 +71,35 @@ def my_application_view(request: HttpRequest, user: User) -> HttpResponse:
 
     data = list(application.values())
     return JsonResponse(data, safe=False)
+
+
+@csrf_exempt
+@require_http_methods(["POST"])
+@require_login
+def my_application_edit(request: HttpRequest, user: User) -> HttpResponse:
+    data = json.loads(request.body)
+
+    application_id = data.get("id")
+
+    if application_id == None:
+        return JsonResponse({"error": "Don't application"}, status=400)
+
+    if not Application.objects.filter(id=application_id).exists():
+        return JsonResponse({"error": " Application doesn't exists"}, status=400)
+
+    application = Application.objects.get(id=application_id)
+
+    if application.author != user:
+        return JsonResponse({"error": "This is not correct user"}, status=400)
+
+    title = data.get("title")
+    text = data.get("text")
+
+    if title == ("" or None) or text == ("" or None):
+        return JsonResponse({"error": "Don't correct application"}, status=400)
+
+    Application.objects.filter(id=application_id).update(title=title, text=text)
+
+    return JsonResponse(
+        {"message": "Application successful."},
+    )
