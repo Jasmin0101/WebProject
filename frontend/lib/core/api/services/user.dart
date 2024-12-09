@@ -21,6 +21,20 @@ abstract class UserService extends ChopperService {
     @Field('dob') String dob,
   );
 
+  @Get(path: '/user/me/view')
+  Future<Response> userMeView();
+
+  @Post(path: '/user/me/edit')
+  Future<Response> edit(
+    @Field('name') String name,
+    @Field('surname') String surname,
+    @Field('email') String email,
+    @Field('city') int city,
+    @Field('login') String login,
+    @Field('password') String password,
+    @Field('dob') String dob,
+  );
+
   @Get(path: '/cities/view')
   Future<Response> citiesView();
 

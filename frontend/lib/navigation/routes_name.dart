@@ -12,7 +12,7 @@ final class RoutesName {
 
   static const String quiz = 'quiz';
 
-  static const String account = 'account';
+  static const String user = 'user';
 
   static const String application = 'application';
 }

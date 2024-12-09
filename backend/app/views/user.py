@@ -18,83 +18,50 @@ from django.views.decorators.http import require_http_methods
 
 
 @csrf_exempt
-@require_http_methods(["POST"])
-def login(request):
-    data = json.loads(request.body)
-    login = data.get("login")
-    password = data.get("password")
-
-    # Проверка наличия email и пароля
-    if not login or not password:
-        return HttpResponseBadRequest("Login and password are required.")
-
+@require_http_methods(["GET"])
+@require_login
+def me_view(request: HttpRequest, user: User) -> HttpResponse:
     try:
-        # Ищем пользователя по email
-        user = User.objects.get(login=login)
-    except User.DoesNotExist:
-        return HttpResponseBadRequest("User not found.")
+        city_data = City.objects.get(id=user.city_id)
+        city_name = city_data.city
+    except Exception as e:
+        city_name = None
+        print(f"Error fetching city data: {e}")
 
-    # Проверяем пароль
-    if not check_password(password, user.password):
-        return HttpResponseBadRequest("Invalid password.")
-
-    refresh = RefreshToken.for_user(user)
-
-    # Возвращаем успешный ответ
     return JsonResponse(
         {
-            "message": "Login successful.",
-            "access_token": str(refresh.access_token),
+            "name": user.name,
+            "surname": user.surname,
+            "city": city_name,
+            "dob": user.dob,
+            "email": user.email,
         }
     )
 
 
 @csrf_exempt
 @require_http_methods(["POST"])
-def registration(request):
+@require_login
+def me_edit(request: HttpRequest, user: User) -> HttpResponse:
     data = json.loads(request.body)
-    # Получение данных из запроса
-    login = data.get("login")
-    email = data.get("email")
+
     name = data.get("name")
     surname = data.get("surname")
-    city_id = data.get("city")
+    city = data.get("city")
     dob = data.get("dob")
-    password = data.get("password")
 
-    print([login, email, name, surname, city_id, dob, password])
+    if not name or not surname or not city or not dob:
+        return JsonResponse(
+            {"error": "All fields (name, surname, city, dob) are required."},
+            status=400,
+        )
 
-    # Проверка наличия всех обязательных полей
-    if not all([login, email, name, surname, city_id, dob, password]):
-        return HttpResponseBadRequest("Not all required fields are provided.")
-
-    # Проверка уникальности логина
-    if User.objects.filter(login=login).exists():
-        return HttpResponseBadRequest("This login is already taken.")
-
-    if not City.objects.filter(id=city_id).exists():
-        return HttpResponseBadRequest("This city is not exists.")
-
-    # Проверка уникальности email
-    if User.objects.filter(email=email).exists():
-        return HttpResponseBadRequest("This email is already taken.")
-
-    user = User.objects.create(
-        login=login,
-        email=email,
-        name=name,
-        surname=surname,
-        city_id=city_id,
-        dob=dob,
-        password=make_password(password),  # Хэширование пароля
-    )
-    refresh = RefreshToken.for_user(user)
-    return JsonResponse(
-        {
-            "message": "Registration successful.",
-            "access_token": str(refresh.access_token),
-        },
-    )
+    user.name = name
+    user.surname = surname
+    user.city = city
+    user.dob = dob
+    user.save()
+    return JsonResponse({"message": "User data updated successfully."})
 
 
 @csrf_exempt

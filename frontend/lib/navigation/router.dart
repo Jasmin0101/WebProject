@@ -2,7 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter_application_1/core/city.dart';
 import 'package:flutter_application_1/core/token.dart';
 import 'package:flutter_application_1/navigation/queries_name.dart';
-import 'package:flutter_application_1/pages/account.dart';
+import 'package:flutter_application_1/pages/user.dart';
 import 'package:flutter_application_1/pages/application.dart';
 import 'package:flutter_application_1/pages/home.dart';
 import 'package:flutter_application_1/pages/login.dart';
@@ -108,11 +108,11 @@ final GoRouter router = GoRouter(
           ),
         ),
         GoRoute(
-          path: RoutesName.account,
-          name: RoutesName.account,
+          path: RoutesName.user,
+          name: RoutesName.user,
           pageBuilder: (context, state) => FadeTransitionPage(
             key: state.pageKey, // Добавлен ключ
-            child: const Account(),
+            child: const UserPage(),
           ),
         )
       ],

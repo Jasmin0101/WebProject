@@ -38,7 +38,7 @@ final class AppNavigator {
         QueriesName.date: DateFormat('yyyy-MM-dd').format(date),
       });
 
-  static void openAccount() => _context.goNamed(
-        RoutesName.account,
+  static void openUser() => _context.goNamed(
+        RoutesName.user,
       );
 }

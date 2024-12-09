@@ -38,7 +38,7 @@ class HomePage extends StatelessWidget {
                 icon: const Icon(Icons.account_circle),
                 onPressed: () {
                   // Логика для кнопки "Аккаунт"
-                  AppNavigator.openAccount();
+                  AppNavigator.openUser();
                 },
               ),
               PopupMenuButton<City>(

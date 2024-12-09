@@ -1,6 +1,7 @@
 from django.urls import path
 
 
+from app.views import auth
 import app.views.user as user
 import app.views.application as application
 import app.views.city as city
@@ -8,13 +9,18 @@ import app.views.city as city
 urlpatterns = [
     path(
         "login",
-        user.login,
+        auth.login,
         name="login",
     ),
     path(
         "registration",
-        user.registration,
+        auth.registration,
         name="registration",
+    ),
+    path(
+        "user/me/view",
+        user.me_view,
+        name="user_me_view",
     ),
     path(
         "status",
