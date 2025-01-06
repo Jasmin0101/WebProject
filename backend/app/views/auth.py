@@ -95,3 +95,20 @@ def registration(request):
             "access_token": str(refresh.access_token),
         },
     )
+
+
+@csrf_exempt
+@require_http_methods(["POST"])
+@require_login
+def checkPassword(request: HttpRequest, user: User) -> HttpResponse:
+
+    data = json.loads(request.body)
+    password = make_password(data.get("password"))
+
+    if password == user.password:
+        return JsonResponse(
+            {"currentPassword": True},
+        )
+    return JsonResponse(
+        {"currentPassword": False},
+    )

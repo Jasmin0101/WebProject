@@ -94,13 +94,13 @@ class _UserWidgetState extends State<UserWidget> {
                     ],
                   ),
                 ),
-      bottomSheet: Padding(
+      bottomNavigationBar: Padding(
         padding: const EdgeInsets.all(16.0),
         child: OverflowBar(
           children: [
             ElevatedButton(
               onPressed: () {
-                const UserEdit();
+                UserEdit.showUserDialog(context, _userData ?? {});
               },
               child: Text(
                 'Редактировать',

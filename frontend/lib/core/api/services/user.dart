@@ -9,6 +9,10 @@ abstract class UserService extends ChopperService {
     @Field('login') String login,
     @Field('password') String password,
   );
+  @Post(path: '/checkPassword')
+  Future<Response> checkPassword(
+    @Field('currentPassword') String currentPassword,
+  );
 
   @Post(path: '/registration')
   Future<Response> registration(

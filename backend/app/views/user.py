@@ -35,6 +35,7 @@ def me_view(request: HttpRequest, user: User) -> HttpResponse:
             "city": city_name,
             "dob": user.dob,
             "email": user.email,
+            "login": user.login,
         }
     )
 

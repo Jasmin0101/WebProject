@@ -18,6 +18,11 @@ urlpatterns = [
         name="registration",
     ),
     path(
+        "checkPassword",
+        auth.checkPassword,
+        name="currentPassword",
+    ),
+    path(
         "user/me/view",
         user.me_view,
         name="user_me_view",

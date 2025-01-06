@@ -3,7 +3,8 @@ from django.contrib.auth.hashers import make_password
 
 
 class City(models.Model):
-    city = models.CharField(max_length=200)
+    city = models.CharField(max_length=200, null=True)
+    city_en = models.CharField(max_length=200)
     id = models.BigAutoField(primary_key=True)
 
 

@@ -22,6 +22,7 @@ dependencies:
   balanced_text: ^0.0.3
   shared_preferences: ^2.3.3
   cupertino_icons: ^1.0.8
+  flutter_masked_text2: ^0.9.1
 
 dev_dependencies:
   flutter_test:
