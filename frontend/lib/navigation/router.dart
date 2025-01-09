@@ -21,7 +21,11 @@ final GoRouter router = GoRouter(
   initialLocation: RoutesName.home,
   navigatorKey: rootNavigatorKey,
   redirect: (context, state) {
-    if (!tokenService.haveValidToken()) {
+    final isLoggedIn = tokenService.haveValidToken();
+    final isLoggingInOrSigningUp = state.matchedLocation == RoutesName.login ||
+        state.matchedLocation == RoutesName.signUp;
+
+    if (!isLoggedIn && !isLoggingInOrSigningUp) {
       return RoutesName.login;
     }
     return null;

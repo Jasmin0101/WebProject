@@ -28,15 +28,14 @@ class WeatherPage extends StatelessWidget {
               IconButton(
                 icon: const Icon(Icons.mail),
                 onPressed: () {
-                  // Логика для кнопки "Письма"
-                  print("Открыть письма");
+                  AppNavigator.openApplication();
                 },
               ),
               IconButton(
                 icon: const Icon(Icons.account_circle),
                 onPressed: () {
                   // Логика для кнопки "Аккаунт"
-                  print("Открыть профиль");
+                  AppNavigator.openUser();
                 },
               ),
               PopupMenuButton<City>(

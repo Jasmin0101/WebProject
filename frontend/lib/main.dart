@@ -27,14 +27,14 @@ class App extends StatelessWidget {
       // создание цветового шаблона для темной темы
       theme: ThemeData.from(
         colorScheme: ColorScheme.fromSeed(
-          seedColor: Colors.teal,
+          seedColor: const Color.fromARGB(255, 164, 203, 221),
           brightness: Brightness.light,
         ),
       ),
       // создание темной темы, адоптируется под тему системы
       darkTheme: ThemeData.from(
         colorScheme: ColorScheme.fromSeed(
-          seedColor: Colors.teal,
+          seedColor: const Color.fromARGB(255, 164, 203, 221),
           brightness: Brightness.dark,
         ),
       ),

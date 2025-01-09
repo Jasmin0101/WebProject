@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_application_1/features/forecast/chart.dart';
 import 'package:flutter_application_1/features/forecast/widget.dart';
 import 'package:intl/intl.dart';
+
+import 'package:fl_chart/fl_chart.dart';
 
 import '../core/city.dart';
 import '../features/quiz/service.dart';
@@ -22,7 +25,8 @@ class HomePage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("${city.name}"),
+        title: Text("Добро пожаловать :>"),
+        centerTitle: true,
         actions: [
           Row(
             mainAxisAlignment: MainAxisAlignment.end,
@@ -56,30 +60,49 @@ class HomePage extends StatelessWidget {
           ),
         ],
       ),
-      body: Center(
-        child: ConstrainedBox(
-          constraints: const BoxConstraints(
-            maxWidth: 380,
-          ),
-          child: ListView(
-              padding: const EdgeInsets.all(8),
-              children: [ForecastWidget(city: city, date: date)]),
+      body: Padding(
+        padding: const EdgeInsets.all(16),
+        child: Column(
+          children: [
+            Container(
+              width: double.infinity,
+              alignment: Alignment.center,
+              decoration: BoxDecoration(
+                image: const DecorationImage(
+                  image: AssetImage("assets/img/snowy.jpg"), ///////////
+                  fit: BoxFit.cover,
+                ),
+                borderRadius: BorderRadius.circular(10),
+              ),
+              margin: const EdgeInsets.only(top: 20),
+              child: Column(
+                children: [
+                  const SizedBox(
+                    height: 20,
+                  ),
+                  Container(
+                    decoration: BoxDecoration(
+                      color: Theme.of(context)
+                          .colorScheme
+                          .primaryContainer
+                          .withOpacity(0.7),
+                      borderRadius: BorderRadius.circular(10),
+                    ),
+                    child: Text(
+                      " Погода ${city.name[1] == 'В' ? 'во' : "в"} ${city.name}е ",
+                      style: Theme.of(context).textTheme.titleLarge,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            const Row(
+              children: [
+                ChartWidget(),
+              ],
+            ),
+          ],
         ),
-      ),
-      floatingActionButton: FloatingActionButton.extended(
-        onPressed: () async {
-          final date = await showDatePicker(
-            context: context,
-            initialDate: this.date,
-            firstDate: DateTime(2023),
-            lastDate: DateTime.now(),
-          );
-          if (date == null) return;
-
-          AppNavigator.openWeather(city, date);
-        },
-        label: const Text("Выберете дату"),
-        icon: const Icon(Icons.calendar_month),
       ),
     );
   }

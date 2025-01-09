@@ -68,7 +68,8 @@ class _ForecastWidgetState extends State<ForecastWidget> {
       decoration: BoxDecoration(
         image: DecorationImage(
           fit: BoxFit.cover,
-          image: AssetImage(_forecast!.asset), // Декорация фона на основе погоды
+          image:
+              AssetImage(_forecast!.asset), // Декорация фона на основе погоды
         ),
       ),
       child: TempWidget(temp: _temp!),
@@ -85,29 +86,29 @@ class TempWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     return BackdropFilter(
       filter: ImageFilter.blur(sigmaX: 5, sigmaY: 5),
-      
-        child: Column(
-          children: [
-            Container(
-              decoration: BoxDecoration(
-                color: Theme.of(context)
-                    .colorScheme.primaryContainer
-                    .withOpacity(0.7),
-                borderRadius: BorderRadius.circular(50),
-              ),
-              margin: const EdgeInsets.all(16),
-              padding: const EdgeInsets.all(16),
-              child: Text(
-                'Температура сейчас: ${temp.toString()}°C',
-                textAlign: TextAlign.center,
-                style: Theme.of(context).textTheme.titleLarge!.copyWith(
-                      color: Theme.of(context).colorScheme.primary,
-                      fontSize: 22,
-                    ),
-              ),
+      child: Column(
+        children: [
+          Container(
+            decoration: BoxDecoration(
+              color: Theme.of(context)
+                  .colorScheme
+                  .primaryContainer
+                  .withOpacity(0.7),
+              borderRadius: BorderRadius.circular(50),
+            ),
+            margin: const EdgeInsets.all(16),
+            padding: const EdgeInsets.all(16),
+            child: Text(
+              '${temp.toString()}°C',
+              textAlign: TextAlign.center,
+              style: Theme.of(context).textTheme.titleLarge!.copyWith(
+                    color: Theme.of(context).colorScheme.primary,
+                    fontSize: 22,
                   ),
-          ],
-        ),
+            ),
+          ),
+        ],
+      ),
     );
   }
 }

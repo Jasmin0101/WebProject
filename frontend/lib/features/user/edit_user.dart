@@ -136,9 +136,11 @@ class _UserEditState extends State<UserEdit> {
               ),
               const SizedBox(height: 16),
               DropdownMenu<int>(
+                expandedInsets: const EdgeInsets.only(top: 8, bottom: 8),
+                menuHeight: 150,
                 width: 360 - 16 * 2,
                 requestFocusOnTap: true,
-                enableFilter: true,
+                enableFilter: false,
                 label: const Text('Город'),
                 onSelected: (citiesId) {
                   _selectedCityId = citiesId;
@@ -252,7 +254,7 @@ class _UserEditState extends State<UserEdit> {
                 children: [
                   ElevatedButton(
                     onPressed: () {
-                      Navigator.of(context).pop(false);
+                      Navigator.of(context).pop();
                     },
                     child: Text('Назад'),
                   ),
