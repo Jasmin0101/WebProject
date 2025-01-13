@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_application_1/features/forecast/chart.dart';
+import 'package:flutter_application_1/features/forecast/current.dart';
+import 'package:flutter_application_1/features/forecast/week.dart';
 import 'package:flutter_application_1/features/forecast/widget.dart';
 import 'package:intl/intl.dart';
 
@@ -60,48 +62,25 @@ class HomePage extends StatelessWidget {
           ),
         ],
       ),
-      body: Padding(
-        padding: const EdgeInsets.all(16),
-        child: Column(
-          children: [
-            Container(
-              width: double.infinity,
-              alignment: Alignment.center,
-              decoration: BoxDecoration(
-                image: const DecorationImage(
-                  image: AssetImage("assets/img/snowy.jpg"), ///////////
-                  fit: BoxFit.cover,
-                ),
-                borderRadius: BorderRadius.circular(10),
+      body: Center(
+        child: ConstrainedBox(
+          constraints: const BoxConstraints(
+            maxWidth: 720,
+          ),
+          child: ListView(
+            padding: const EdgeInsets.all(24),
+            children: const [
+              CurrentForecast(),
+              SizedBox(
+                height: 32,
               ),
-              margin: const EdgeInsets.only(top: 20),
-              child: Column(
-                children: [
-                  const SizedBox(
-                    height: 20,
-                  ),
-                  Container(
-                    decoration: BoxDecoration(
-                      color: Theme.of(context)
-                          .colorScheme
-                          .primaryContainer
-                          .withOpacity(0.7),
-                      borderRadius: BorderRadius.circular(10),
-                    ),
-                    child: Text(
-                      " Погода ${city.name[1] == 'В' ? 'во' : "в"} ${city.name}е ",
-                      style: Theme.of(context).textTheme.titleLarge,
-                    ),
-                  ),
-                ],
+              WeekForecast(),
+              SizedBox(
+                height: 8,
               ),
-            ),
-            const Row(
-              children: [
-                ChartWidget(),
-              ],
-            ),
-          ],
+              ChartForecast(),
+            ],
+          ),
         ),
       ),
     );

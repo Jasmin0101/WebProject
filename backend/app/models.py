@@ -51,3 +51,22 @@ class Application(models.Model):
     author = models.ForeignKey(
         User, on_delete=models.CASCADE, related_name="applications"
     )
+
+
+class Forecast(models.Model):
+
+    city = models.ForeignKey(
+        City, on_delete=models.CASCADE, related_name="forecast_city"
+    )
+
+    date = models.DateField(null=True)
+    time = models.TimeField(null=True)
+    max_temp = models.FloatField(null=True)
+    min_temp = models.FloatField(null=True)
+
+    temperature = models.FloatField(null=True)
+    conditions = models.CharField(max_length=255, null=True)
+    pressure = models.FloatField(null=True)
+    humidity = models.FloatField(null=True)
+
+    wind_speed = models.FloatField(null=True)

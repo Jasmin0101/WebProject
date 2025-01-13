@@ -19,7 +19,7 @@ from django.views.decorators.http import require_http_methods
 
 @csrf_exempt
 @require_http_methods(["GET"])
-@require_login
+@require_login  # декоратор ( если забыла посмотри реализацию )
 def me_view(request: HttpRequest, user: User) -> HttpResponse:
     try:
         city_data = City.objects.get(id=user.city_id)

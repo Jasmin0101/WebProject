@@ -1,10 +1,11 @@
 from django.urls import path
 
 
-from app.views import auth
+from app.views import auth, forecast
 import app.views.user as user
 import app.views.application as application
 import app.views.city as city
+import app.views.parser as parser
 
 urlpatterns = [
     path(
@@ -56,5 +57,30 @@ urlpatterns = [
         "cities/view/",
         city.cites_view,
         name="cities_view",
+    ),
+    path(
+        "forecast/today/",
+        forecast.today,
+        name="today",
+    ),
+    path(
+        "forecast/week/",
+        forecast.week,
+        name="week",
+    ),
+    path(
+        "forecast/today_24/",
+        forecast.today,
+        name="today_24",
+    ),
+    path(
+        "parser/start/",
+        parser.parser_start,
+        name="parser_start",
+    ),
+    path(
+        "randomizer/start/",
+        parser.randomizer_start,
+        name="randomizer_start",
     ),
 ]
