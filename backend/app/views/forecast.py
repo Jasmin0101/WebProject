@@ -88,16 +88,55 @@ def week(request: HttpRequest, user: User) -> HttpResponse:
             city=city_id, date__range=[start_date, end_date]
         ).order_by("date")
 
+        forecast_dict = {}
+        for i in forecasts:
+            if forecast_dict.get(i.date) == None:
+                forecast_dict[i.date] = i
+
+        print(forecast_dict)
+        forecast_list = []
+
+        def which_weekday(start, day):
+            if start.weekday() == day.weekday():
+                return "Сегодня"
+            if (start.weekday() + 1) % 7 == day.weekday():
+                return "Завтра"
+            if day.weekday() == 0:
+                return "Пн"
+            if day.weekday() == 1:
+                return "Вт"
+            if day.weekday() == 2:
+                return "Ср"
+            if day.weekday() == 3:
+                return "Чт"
+            if day.weekday() == 4:
+                return "Пт"
+            if day.weekday() == 5:
+                return "Сб"
+            if day.weekday() == 6:
+                return "Вс"
+
+        for key in forecast_dict.keys():
+            forecast_list.append(
+                {
+                    "date": key.strftime("%Y-%m-%d"),
+                    "max_temp": forecast_dict[key].max_temp,
+                    "min_temp": forecast_dict[key].max_temp,
+                    "conditions": forecast_dict[key].conditions,
+                    "day_name": which_weekday(start_date, key),
+                }
+            )
+
         # Формируем ответ
-        forecast_list = [
-            {
-                "date": forecast.date.strftime("%Y-%m-%d"),
-                "max_temp": forecast.max_temp,
-                "min_temp": forecast.max_temp,
-                "conditions": forecast.conditions,
-            }
-            for forecast in forecasts
-        ]
+        # forecast_list = [
+        #     {
+        #         "date": forecast.date.strftime("%Y-%m-%d"),
+        #         "max_temp": forecast.max_temp,
+        #         "min_temp": forecast.max_temp,
+        #         # "conditions": forecast.conditions,
+        #     }
+        #     for forecast in forecasts
+        # ]
 
         return JsonResponse({"forecasts": forecast_list}, status=200)
 
@@ -109,13 +148,15 @@ def week(request: HttpRequest, user: User) -> HttpResponse:
 
 @csrf_exempt
 @require_http_methods(["GET"])
-def today_24(request):
+@require_login
+def today24(request: HttpRequest, user: User) -> HttpResponse:
     try:
 
         # Получаем данные из тела запроса
-        city = request.GET.get("city")
-        date = request.GET.get("date")
-
+        city = request.GET.get("city", user.city.id)
+        time = request.GET.get("time")[10:]
+        date = request.GET.get("time")[:10]
+        print(city, time, date)
         # Проверяем, что обязательные параметры переданы
         if not city or not date:
             return HttpResponseBadRequest("Missing 'city' or 'date' parameter")
@@ -123,6 +164,7 @@ def today_24(request):
         # Получаем прогнозы за указанный день
         forecasts = Forecast.objects.filter(city=city, date=date).order_by("time")
 
+        print(forecasts)
         # Проверяем, есть ли данные
         if not forecasts.exists():
             return JsonResponse(

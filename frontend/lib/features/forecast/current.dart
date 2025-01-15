@@ -94,35 +94,44 @@ class _CurrentForecastState extends State<CurrentForecast> {
     return AnimatedSize(
       duration: const Duration(milliseconds: 300),
       alignment: Alignment.topCenter,
-      child: _isLoading
-          ? const Center(child: CircularProgressIndicator())
-          : _fetchError || _forecastData == null
-              ? const Center(child: Text('Не удалось загрузить данные'))
-              : Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      _forecastData!['city'] ?? "Местоположение не известно",
-                      style: const TextStyle(
-                        fontWeight: FontWeight.bold,
-                        fontSize: 16,
-                      ),
+      child: ConstrainedBox(
+        constraints: BoxConstraints(minHeight: 189),
+        child: AnimatedSwitcher(
+          duration: const Duration(milliseconds: 300),
+          child: _isLoading
+              ? const Center(child: CircularProgressIndicator())
+              : _fetchError || _forecastData == null
+                  ? const Center(child: Text('Не удалось загрузить данные'))
+                  : Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        SizedBox(width: double.infinity),
+                        Text(
+                          _forecastData!['city'] ??
+                              "Местоположение не известно",
+                          style: const TextStyle(
+                            fontWeight: FontWeight.bold,
+                            fontSize: 16,
+                          ),
+                        ),
+                        Text(
+                          "${_forecastData!['temperature'].toInt().toString()}°C",
+                          style: const TextStyle(
+                            fontSize: 100,
+                            fontWeight: FontWeight.w100,
+                          ),
+                        ),
+                        Text(
+                          _getWeatherDescription(
+                              _forecastData!['weather_type']),
+                          style: const TextStyle(
+                            fontSize: 16,
+                          ),
+                        ),
+                      ],
                     ),
-                    Text(
-                      "${_forecastData!['temperature'].toString()}°C",
-                      style: const TextStyle(
-                        fontSize: 100,
-                        fontWeight: FontWeight.w100,
-                      ),
-                    ),
-                    Text(
-                      _getWeatherDescription(_forecastData!['weather_type']),
-                      style: const TextStyle(
-                        fontSize: 16,
-                      ),
-                    ),
-                  ],
-                ),
+        ),
+      ),
     );
   }
 }

@@ -69,9 +69,9 @@ urlpatterns = [
         name="week",
     ),
     path(
-        "forecast/today_24/",
-        forecast.today,
-        name="today_24",
+        "forecast/today24/",
+        forecast.today24,
+        name="today24",
     ),
     path(
         "parser/start/",

@@ -45,7 +45,6 @@ class _WeekForecastState extends State<WeekForecast> {
     await _fetchForecastWeek();
     setState(() {
       _isLoading = false;
-      _fetchError = true;
     });
   }
 
@@ -60,43 +59,75 @@ class _WeekForecastState extends State<WeekForecast> {
     return AnimatedSize(
       duration: const Duration(milliseconds: 300),
       alignment: Alignment.topCenter,
-      child: _isLoading
-          ? const Center(child: CircularProgressIndicator())
-          : _fetchError || _forecastDataWeek == null
-              ? const Center(child: Text('Не удалось загрузить данные'))
-              : Container(
+      child: ConstrainedBox(
+        constraints: BoxConstraints(minHeight: 298),
+        child: AnimatedSwitcher(
+          duration: const Duration(milliseconds: 300),
+          child: Builder(
+            builder: (context) {
+              if (_isLoading) {
+                return Container(
                   padding: const EdgeInsets.all(16),
                   decoration: BoxDecoration(
                     color: Theme.of(context).colorScheme.surfaceContainer,
                     borderRadius: BorderRadius.circular(24),
                   ),
-                  child: const Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        'Прогноз на 7 дней',
-                        style: TextStyle(fontWeight: FontWeight.bold),
-                      ),
-                      SizedBox(
-                        height: 10,
-                      ),
-                      _DayForecast(
-                          date: 'Сегодня', minTemp: -243, maxTemp: 500),
-                      Divider(),
-                      _DayForecast(date: 'Завтра', minTemp: -23, maxTemp: 22),
-                      Divider(),
-                      _DayForecast(date: '3', minTemp: -23, maxTemp: 22),
-                      Divider(),
-                      _DayForecast(date: '4', minTemp: -23, maxTemp: 22),
-                      Divider(),
-                      _DayForecast(date: '5', minTemp: -23, maxTemp: 22),
-                      Divider(),
-                      _DayForecast(date: '6', minTemp: -23, maxTemp: 22),
-                      Divider(),
-                      _DayForecast(date: '7', minTemp: -23, maxTemp: 22)
-                    ],
+                  height: 298,
+                  child: const Center(
+                    child: CircularProgressIndicator(),
                   ),
+                );
+              }
+
+              final isError = _fetchError || _forecastDataWeek == null;
+
+              if (isError) {
+                return const Center(child: Text('Не удалось загрузить данные'));
+              }
+
+              return Container(
+                padding: const EdgeInsets.all(16),
+                decoration: BoxDecoration(
+                  color: Theme.of(context).colorScheme.surfaceContainer,
+                  borderRadius: BorderRadius.circular(24),
                 ),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    const Text(
+                      'Прогноз на 7 дней',
+                      style: TextStyle(fontWeight: FontWeight.bold),
+                    ),
+                    const SizedBox(
+                      height: 10,
+                    ),
+                    ...List.generate(
+                      _forecastDataWeek!['forecasts'].length,
+                      (index) {
+                        return Column(
+                          children: [
+                            _DayForecast(
+                              date: _forecastDataWeek!['forecasts'][index]
+                                  ['day_name'],
+                              minTemp: _forecastDataWeek!['forecasts'][index]
+                                      ['min_temp']
+                                  .toInt(),
+                              maxTemp: _forecastDataWeek!['forecasts'][index]
+                                      ['max_temp']
+                                  .toInt(),
+                            ),
+                            if (index != 6) const Divider(),
+                          ],
+                        );
+                      },
+                    ),
+                  ],
+                ),
+              );
+            },
+          ),
+        ),
+      ),
     );
   }
 }
@@ -117,7 +148,7 @@ class _DayForecast extends StatelessWidget {
       children: [
         Text(date),
         Spacer(),
-        Text('От${minTemp}° до ${maxTemp}°'),
+        Text('От ${minTemp}° до ${maxTemp}°'),
       ],
     );
   }
