@@ -20,8 +20,17 @@ final class AppNavigator {
   static void openSignUp() => _context.goNamed(
         RoutesName.signUp,
       );
-  static void openHome() => _context.goNamed(
+  static void openHome({
+    int? cityId,
+    DateTime? date,
+  }) =>
+      _context.goNamed(
         RoutesName.home,
+        queryParameters: {
+          QueriesName.cityId: cityId.toString(),
+          if (date != null)
+            QueriesName.date: DateFormat("yyyy-MM-dd").format(date),
+        },
       );
   static void openQuiz() => _context.goNamed(
         RoutesName.quiz,
@@ -34,7 +43,7 @@ final class AppNavigator {
     DateTime date,
   ) =>
       _context.goNamed(RoutesName.weather, pathParameters: {
-        QueriesName.city: city.queryName,
+        QueriesName.cityId: city.queryName,
         QueriesName.date: DateFormat('yyyy-MM-dd').format(date),
       });
 

@@ -4,19 +4,18 @@ import 'package:flutter_application_1/features/forecast/city_selector.dart';
 import 'package:flutter_application_1/features/forecast/current.dart';
 import 'package:flutter_application_1/features/forecast/week.dart';
 
-import '../core/city.dart';
 import '../features/quiz/service.dart';
 import '../features/quiz/widgets/quiz.dart';
 import '../navigation/navigator.dart';
 
 class HomePage extends StatelessWidget {
-  final City city;
-  final DateTime date;
+  final int? cityId;
+  final DateTime? date;
 
   const HomePage({
     super.key,
-    required this.city,
-    required this.date,
+    this.cityId,
+    this.date,
   });
 
   @override
@@ -43,17 +42,6 @@ class HomePage extends StatelessWidget {
                   AppNavigator.openUser();
                 },
               ),
-              PopupMenuButton<City>(
-                initialValue: city,
-                onSelected: (City item) => AppNavigator.openWeather(item, date),
-                itemBuilder: (context) => List.generate(
-                  City.values.length,
-                  (index) => PopupMenuItem<City>(
-                    value: City.values[index],
-                    child: Text(City.values[index].name),
-                  ),
-                ),
-              ),
             ],
           ),
         ],
@@ -65,20 +53,22 @@ class HomePage extends StatelessWidget {
           ),
           child: ListView(
             padding: const EdgeInsets.all(24),
-            children: const [
-              CurrentForecast(),
-              SizedBox(
+            children: [
+              const CurrentForecast(),
+              const SizedBox(
                 height: 32,
               ),
-              WeekForecast(),
-              SizedBox(
+              const WeekForecast(),
+              const SizedBox(
                 height: 8,
               ),
-              ChartForecast(),
-              SizedBox(
+              const ChartForecast(),
+              const SizedBox(
                 height: 32,
               ),
-              CitySelector(),
+              CitySelector(
+                selectedCity: cityId,
+              ),
             ],
           ),
         ),
