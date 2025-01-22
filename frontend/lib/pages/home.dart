@@ -54,15 +54,13 @@ class HomePage extends StatelessWidget {
           ),
           child: ListView(
             padding: const EdgeInsets.all(24),
-            children: const [
+            children: [
               Row(
                 children: [
                   CurrentForecast(),
                   // DateSelector(currentDate: DateTime.now)
                 ],
               ),
-              SizedBox(
-            children: [
               const CurrentForecast(),
               const SizedBox(
                 height: 32,
