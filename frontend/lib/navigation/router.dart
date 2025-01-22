@@ -104,16 +104,18 @@ final GoRouter router = GoRouter(
           ),
         ),
         GoRoute(
-          path: RoutesName.application,
-          name: RoutesName.application,
-          pageBuilder: (context, state) => FadeTransitionPage(
-            key: state.pageKey, // Добавлен ключ
-            child: const ApplicationPage(),
-          ),
-        ),
-        GoRoute(
           path: RoutesName.user,
           name: RoutesName.user,
+          routes: [
+            GoRoute(
+              path: RoutesName.application,
+              name: RoutesName.application,
+              pageBuilder: (context, state) => FadeTransitionPage(
+                key: state.pageKey, // Добавлен ключ
+                child: const ApplicationPage(),
+              ),
+            ),
+          ],
           pageBuilder: (context, state) => FadeTransitionPage(
             key: state.pageKey, // Добавлен ключ
             child: const UserPage(),

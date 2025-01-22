@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_application_1/features/date_time/date_selector.dart';
 import 'package:flutter_application_1/features/forecast/chart.dart';
 import 'package:flutter_application_1/features/forecast/city_selector.dart';
 import 'package:flutter_application_1/features/forecast/current.dart';
@@ -30,29 +31,18 @@ class HomePage extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.end,
             mainAxisSize: MainAxisSize.max,
             children: [
-              IconButton(
-                icon: const Icon(Icons.mail),
-                onPressed: () {
-                  AppNavigator.openApplication();
-                },
-              ),
+              // IconButton(
+              //   icon: const Icon(Icons.mail),
+              //   onPressed: () {
+              //     AppNavigator.openApplication();
+              //   },
+              // ),
               IconButton(
                 icon: const Icon(Icons.account_circle),
                 onPressed: () {
                   // Логика для кнопки "Аккаунт"
                   AppNavigator.openUser();
                 },
-              ),
-              PopupMenuButton<City>(
-                initialValue: city,
-                onSelected: (City item) => AppNavigator.openWeather(item, date),
-                itemBuilder: (context) => List.generate(
-                  City.values.length,
-                  (index) => PopupMenuItem<City>(
-                    value: City.values[index],
-                    child: Text(City.values[index].name),
-                  ),
-                ),
               ),
             ],
           ),
@@ -66,7 +56,12 @@ class HomePage extends StatelessWidget {
           child: ListView(
             padding: const EdgeInsets.all(24),
             children: const [
-              CurrentForecast(),
+              Row(
+                children: [
+                  CurrentForecast(),
+                  // DateSelector(currentDate: DateTime.now)
+                ],
+              ),
               SizedBox(
                 height: 32,
               ),

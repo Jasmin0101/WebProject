@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_application_1/features/user/user.dart';
+import 'package:flutter_application_1/navigation/navigator.dart';
 
 class UserPage extends StatelessWidget {
   const UserPage({super.key});
@@ -12,6 +13,14 @@ class UserPage extends StatelessWidget {
           'Профиль 🔆',
           style: Theme.of(context).textTheme.headlineLarge,
         ),
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.mail),
+            onPressed: () {
+              AppNavigator.openApplication();
+            },
+          ),
+        ],
         centerTitle: true,
       ),
       body: Column(
