@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_application_1/features/forecast/chart.dart';
+import 'package:flutter_application_1/features/forecast/city_selector.dart';
 import 'package:flutter_application_1/features/forecast/current.dart';
 import 'package:flutter_application_1/features/forecast/week.dart';
-
 
 import '../core/city.dart';
 import '../features/quiz/service.dart';
@@ -75,6 +75,10 @@ class HomePage extends StatelessWidget {
                 height: 8,
               ),
               ChartForecast(),
+              SizedBox(
+                height: 32,
+              ),
+              CitySelector(),
             ],
           ),
         ),
