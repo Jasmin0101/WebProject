@@ -1,4 +1,3 @@
-import 'package:flutter_application_1/core/api/chopper.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 final class TokenService {

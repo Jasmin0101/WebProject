@@ -2,16 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter_application_1/features/forecast/chart.dart';
 import 'package:flutter_application_1/features/forecast/current.dart';
 import 'package:flutter_application_1/features/forecast/week.dart';
-import 'package:flutter_application_1/features/forecast/widget.dart';
-import 'package:intl/intl.dart';
 
-import 'package:fl_chart/fl_chart.dart';
 
 import '../core/city.dart';
 import '../features/quiz/service.dart';
 import '../features/quiz/widgets/quiz.dart';
 import '../navigation/navigator.dart';
-import 'questionnaire.dart';
 
 class HomePage extends StatelessWidget {
   final City city;
@@ -27,7 +23,7 @@ class HomePage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("Добро пожаловать :>"),
+        title: const Text("Добро пожаловать :>"),
         centerTitle: true,
         actions: [
           Row(

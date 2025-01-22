@@ -87,7 +87,7 @@ class _RegistrationFormState extends State<RegistrationForm> {
                   ),
                 ],
               ),
-              SizedBox(height: 16),
+              const SizedBox(height: 16),
               // Имя
               ConstrainedBox(
                 constraints: const BoxConstraints(
@@ -264,10 +264,10 @@ class _RegistrationFormState extends State<RegistrationForm> {
                   inputFormatters: [FilteringTextInputFormatter.digitsOnly],
                   decoration: InputDecoration(
                     hintText: "Дата рождения",
-                    border: OutlineInputBorder(),
+                    border: const OutlineInputBorder(),
                     labelText: 'Дата рождения',
                     suffixIcon: IconButton(
-                      icon: Icon(Icons.calendar_today),
+                      icon: const Icon(Icons.calendar_today),
                       onPressed: () async {
                         final DateTime? pickedDate = await showDatePicker(
                           context: context,

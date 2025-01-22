@@ -1,11 +1,10 @@
 from django.urls import path
 
-
-from app.views import auth, forecast
-import app.views.user as user
 import app.views.application as application
 import app.views.city as city
 import app.views.parser as parser
+import app.views.user as user
+from app.views import auth, forecast
 
 urlpatterns = [
     path(
@@ -26,6 +25,11 @@ urlpatterns = [
     path(
         "user/me/view",
         user.me_view,
+        name="user_me_view",
+    ),
+    path(
+        "user/me/edit",
+        user.me_edit,
         name="user_me_view",
     ),
     path(

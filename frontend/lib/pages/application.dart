@@ -13,9 +13,9 @@ class _ApplicationPageState extends State<ApplicationPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Тех.поддержка '),
+        title: const Text('Тех.поддержка '),
       ),
-      body: ApplicationWidget(),
+      body: const ApplicationWidget(),
     );
   }
 }

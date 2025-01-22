@@ -60,7 +60,7 @@ class _WeekForecastState extends State<WeekForecast> {
       duration: const Duration(milliseconds: 300),
       alignment: Alignment.topCenter,
       child: ConstrainedBox(
-        constraints: BoxConstraints(minHeight: 298),
+        constraints: const BoxConstraints(minHeight: 298),
         child: AnimatedSwitcher(
           duration: const Duration(milliseconds: 300),
           child: Builder(
@@ -147,8 +147,8 @@ class _DayForecast extends StatelessWidget {
     return Row(
       children: [
         Text(date),
-        Spacer(),
-        Text('От ${minTemp}° до ${maxTemp}°'),
+        const Spacer(),
+        Text('От $minTemp° до $maxTemp°'),
       ],
     );
   }

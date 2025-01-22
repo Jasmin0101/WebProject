@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
 
 import '../core/city.dart';
 import '../features/forecast/widget.dart';
@@ -19,7 +18,7 @@ class WeatherPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("${city.name}"),
+        title: Text(city.name),
         actions: [
           Row(
             mainAxisAlignment: MainAxisAlignment.end,

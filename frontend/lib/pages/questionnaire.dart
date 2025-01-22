@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 
-import '../navigation/navigator.dart';
 
 class QuestionnairePage extends StatefulWidget {
   const QuestionnairePage({super.key});

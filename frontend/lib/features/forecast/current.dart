@@ -95,7 +95,7 @@ class _CurrentForecastState extends State<CurrentForecast> {
       duration: const Duration(milliseconds: 300),
       alignment: Alignment.topCenter,
       child: ConstrainedBox(
-        constraints: BoxConstraints(minHeight: 189),
+        constraints: const BoxConstraints(minHeight: 189),
         child: AnimatedSwitcher(
           duration: const Duration(milliseconds: 300),
           child: _isLoading
@@ -105,7 +105,7 @@ class _CurrentForecastState extends State<CurrentForecast> {
                   : Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        SizedBox(width: double.infinity),
+                        const SizedBox(width: double.infinity),
                         Text(
                           _forecastData!['city'] ??
                               "Местоположение не известно",

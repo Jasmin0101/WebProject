@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_application_1/core/api/chopper.dart';
 import 'package:flutter_application_1/core/api/services/user.dart';
+import 'package:flutter_application_1/core/token.dart';
 import 'package:flutter_application_1/features/user/edit_user.dart';
+import 'package:flutter_application_1/navigation/navigator.dart';
 
 class UserWidget extends StatefulWidget {
   const UserWidget({super.key});
@@ -49,7 +51,10 @@ class _UserWidgetState extends State<UserWidget> {
       margin: const EdgeInsets.symmetric(vertical: 8.0),
       padding: const EdgeInsets.all(12.0),
       decoration: BoxDecoration(
-        border: Border.all(width: 2.0, color: Theme.of(context).primaryColor),
+        border: Border.all(
+          width: 2.0,
+          color: Theme.of(context).primaryColor,
+        ),
         borderRadius: BorderRadius.circular(8.0),
       ),
       child: Column(
@@ -80,10 +85,8 @@ class _UserWidgetState extends State<UserWidget> {
                   padding: const EdgeInsets.all(16.0),
                   child: Column(
                     children: [
-                      _buildFieldGroup(
-                          'Имя пользователя:',
-                          _userData!['name'] + ' ' + _userData!['surname'] ??
-                              'Не указано'),
+                      _buildFieldGroup('Имя пользователя:',
+                          "${_userData!['name']}  ${_userData!['surname'] ?? 'Не указано'} "),
                       _buildFieldGroup(
                           'Email:', _userData!['email'] ?? 'Не указано'),
                       _buildFieldGroup(
@@ -96,28 +99,28 @@ class _UserWidgetState extends State<UserWidget> {
                 ),
       bottomNavigationBar: Padding(
         padding: const EdgeInsets.all(16.0),
-        child: OverflowBar(
+        child: Row(
           children: [
-            ElevatedButton(
-              onPressed: () {
-                UserEdit.showUserDialog(context, _userData ?? {});
-              },
-              child: Text(
-                'Редактировать',
-                style: Theme.of(context).textTheme.bodyLarge,
+            if (_userData != null)
+              Expanded(
+                child: ElevatedButton(
+                  onPressed: () {
+                    UserEdit.showUserDialog(context, _userData ?? {});
+                  },
+                  child: const Text('Редактировать'),
+                ),
               ),
-            ),
-            const SizedBox(
-              width: 20,
-            ),
-            ElevatedButton(
-              onPressed: () {
-                // Логика выхода
-                Navigator.pushReplacementNamed(context, '/login');
-              },
-              child: Text(
-                'Выйти',
-                style: Theme.of(context).textTheme.bodyLarge,
+            if (_userData != null)
+              const SizedBox(
+                width: 20,
+              ),
+            Expanded(
+              child: ElevatedButton(
+                onPressed: () {
+                  tokenService.removeToken();
+                  AppNavigator.openLogin();
+                },
+                child: const Text('Выйти'),
               ),
             ),
           ],

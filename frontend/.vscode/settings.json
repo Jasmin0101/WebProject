@@ -1,5 +1,5 @@
 {
-  "dart.flutterSdkPath": "C:\\Users\\User\\.puro\\envs\\stable\\flutter",
+  "dart.flutterSdkPath": "/Users/vsevolodpanteleev/.puro/envs/stable/flutter",
   "cSpell.words": [
     "было",
     "заголовка",
@@ -11,5 +11,6 @@
     "Получено",
     "Прочитано",
     "статуса"
-  ]
+  ],
+    "dart.sdkPath": "/Users/vsevolodpanteleev/.puro/envs/stable/flutter/bin/cache/dart-sdk"
 }

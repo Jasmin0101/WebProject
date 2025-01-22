@@ -12,7 +12,6 @@ class UserPage extends StatelessWidget {
           'Профиль 🔆',
           style: Theme.of(context).textTheme.headlineLarge,
         ),
-        actions: [],
         centerTitle: true,
       ),
       body: Column(

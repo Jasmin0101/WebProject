@@ -6,7 +6,7 @@ import '../../core/city.dart';
 final class ForecastService {
   // Ajax для создания запроса на сайт Weatherapi по ключу apiKey
   static Future<Map<String, dynamic>> get(City city, DateTime date) async {
-    final apiKey = '49e5ca8e4dd5453ca3e50132242310';
+    const apiKey = '49e5ca8e4dd5453ca3e50132242310';
 
     final url = Uri.parse(
         'https://api.weatherapi.com/v1/history.json?key=$apiKey&q=${city.queryName}&dt=$date');

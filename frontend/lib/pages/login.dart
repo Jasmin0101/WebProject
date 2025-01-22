@@ -38,7 +38,7 @@ class LoginPage extends StatelessWidget {
                 constraints: const BoxConstraints(
                   maxWidth: 360,
                 ),
-                child: LoginForm(),
+                child: const LoginForm(),
               ),
             ),
           ),

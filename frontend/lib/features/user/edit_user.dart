@@ -1,9 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_application_1/core/api/chopper.dart';
-import 'package:flutter_application_1/core/api/services/application.dart';
 import 'package:flutter_application_1/core/api/services/user.dart';
-import 'package:flutter_application_1/core/token.dart';
-import 'package:flutter_application_1/navigation/navigator.dart';
 import 'package:intl/intl.dart';
 
 class UserEdit extends StatefulWidget {
@@ -58,6 +56,15 @@ class _UserEditState extends State<UserEdit> {
 
   DateTime? _selectedDate;
 
+  Future<void> _fetchCities() async {
+    try {
+      final cities = await api.getService<UserService>().citiesView();
+      _cities = List<Map>.from(cities.body);
+      _selectedCityId = widget.user['city_id'];
+      setState(() {});
+    } catch (_) {}
+  }
+
   @override
   void initState() {
     _nameController = TextEditingController(text: widget.user['name']);
@@ -68,185 +75,219 @@ class _UserEditState extends State<UserEdit> {
     _confirmPasswordController = TextEditingController();
     _dateController = TextEditingController(text: widget.user['dob']);
 
+    _selectedDate = DateFormat("yyyy-MM-dd").parse(widget.user['dob']);
+
+    _fetchCities();
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: EdgeInsets.all(16),
+      padding: const EdgeInsets.all(16),
       child: SingleChildScrollView(
         controller: widget.controller,
         child: Form(
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
-              // Имя
-              TextFormField(
-                controller: _nameController,
-                decoration: const InputDecoration(
-                  hintText: "Введите имя",
-                  border: OutlineInputBorder(),
-                  labelText: 'Имя',
+              ConstrainedBox(
+                constraints: const BoxConstraints(
+                  minHeight: 72,
                 ),
-                validator: (value) {
-                  if (value == null || value.isEmpty) {
-                    return 'Введите имя';
-                  }
-                  return null;
-                },
+                child: TextFormField(
+                  controller: _nameController,
+                  decoration: const InputDecoration(
+                    hintText: "Введите имя",
+                    border: OutlineInputBorder(),
+                    labelText: 'Имя',
+                  ),
+                  validator: (value) {
+                    if (value == null || value.isEmpty) {
+                      return 'Введите имя';
+                    }
+                    return null;
+                  },
+                ),
               ),
-              const SizedBox(height: 16),
               // Фамилия
-              TextFormField(
-                controller: _surnameController,
-                decoration: const InputDecoration(
-                  hintText: "Введите фамилию",
-                  border: OutlineInputBorder(),
-                  labelText: 'Фамилия',
+              ConstrainedBox(
+                constraints: const BoxConstraints(
+                  minHeight: 72,
                 ),
-                validator: (value) {
-                  if (value == null || value.isEmpty) {
-                    return 'Введите фамилию';
-                  }
-                  return null;
-                },
+                child: TextFormField(
+                  controller: _surnameController,
+                  decoration: const InputDecoration(
+                    hintText: "Введите фамилию",
+                    border: OutlineInputBorder(),
+                    labelText: 'Фамилия',
+                  ),
+                  validator: (value) {
+                    if (value == null || value.isEmpty) {
+                      return 'Введите фамилию';
+                    }
+                    return null;
+                  },
+                ),
               ),
-              const SizedBox(height: 16),
+
               // Email
-              TextFormField(
-                controller: _emailController,
-                decoration: const InputDecoration(
-                  hintText: "Введите адрес электронной почты",
-                  border: OutlineInputBorder(),
-                  labelText: 'Email',
+              ConstrainedBox(
+                constraints: const BoxConstraints(
+                  minHeight: 72,
                 ),
-                keyboardType: TextInputType.emailAddress,
-                validator: (value) {
-                  if (value == null || value.isEmpty) {
-                    return 'Введите адрес электронной почты';
-                  }
-                  if (!RegExp(
-                          r"^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$")
-                      .hasMatch(value)) {
-                    return 'Введите корректный email';
-                  }
-                  return null;
-                },
+                child: TextFormField(
+                  controller: _emailController,
+                  decoration: const InputDecoration(
+                    hintText: "Введите адрес электронной почты",
+                    border: OutlineInputBorder(),
+                    labelText: 'Email',
+                  ),
+                  keyboardType: TextInputType.emailAddress,
+                  validator: (value) {
+                    if (value == null || value.isEmpty) {
+                      return 'Введите адрес электронной почты';
+                    }
+                    if (!RegExp(
+                            r"^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$")
+                        .hasMatch(value)) {
+                      return 'Введите корректный email';
+                    }
+                    return null;
+                  },
+                ),
               ),
-              const SizedBox(height: 16),
-              DropdownMenu<int>(
-                expandedInsets: const EdgeInsets.only(top: 8, bottom: 8),
-                menuHeight: 150,
-                width: 360 - 16 * 2,
-                requestFocusOnTap: true,
-                enableFilter: false,
-                label: const Text('Город'),
-                onSelected: (citiesId) {
-                  _selectedCityId = citiesId;
-                  setState(() {});
-                },
-                dropdownMenuEntries: List.generate(
-                  _cities.length,
-                  (index) => DropdownMenuEntry(
-                    value: _cities[index]['id'],
-                    label: _cities[index]['city'],
+
+              ConstrainedBox(
+                constraints: const BoxConstraints(
+                  minHeight: 72,
+                ),
+                child: DropdownMenu<int>(
+                  expandedInsets: const EdgeInsets.only(top: 8, bottom: 8),
+                  menuHeight: 150,
+                  width: 360 - 16 * 2,
+                  requestFocusOnTap: true,
+                  enableFilter: false,
+                  label: const Text('Город'),
+                  onSelected: (citiesId) {
+                    _selectedCityId = citiesId;
+                    setState(() {});
+                  },
+                  initialSelection: _selectedCityId,
+                  dropdownMenuEntries: List.generate(
+                    _cities.length,
+                    (index) => DropdownMenuEntry(
+                      value: _cities[index]['id'],
+                      label: _cities[index]['city'],
+                    ),
                   ),
                 ),
               ),
-              const SizedBox(height: 16),
               // Логин
-              TextFormField(
-                controller: _loginController,
-                decoration: const InputDecoration(
-                  hintText: "Введите логин",
-                  border: OutlineInputBorder(),
-                  labelText: 'Логин',
+              ConstrainedBox(
+                constraints: const BoxConstraints(
+                  minHeight: 72,
                 ),
-                validator: (value) {
-                  if (value == null || value.isEmpty) {
-                    return 'Введите логин';
-                  }
-                  if (value.length < 4) {
-                    return 'Логин должен быть не менее 4 символов';
-                  }
-                  return null;
-                },
+                child: TextFormField(
+                  controller: _loginController,
+                  decoration: const InputDecoration(
+                    hintText: "Введите логин",
+                    border: OutlineInputBorder(),
+                    labelText: 'Логин',
+                  ),
+                  validator: (value) {
+                    if (value == null || value.isEmpty) {
+                      return 'Введите логин';
+                    }
+                    if (value.length < 4) {
+                      return 'Логин должен быть не менее 4 символов';
+                    }
+                    return null;
+                  },
+                ),
               ),
-              const SizedBox(height: 16),
-              // Пароль
-              TextFormField(
-                controller: _passwordController,
-                decoration: const InputDecoration(
-                  hintText: "Введите пароль",
-                  border: OutlineInputBorder(),
-                  labelText: 'Пароль',
-                ),
-                validator: (value) {
-                  if (value == null || value.isEmpty) {
-                    return 'Введите пароль';
-                  }
-                  if (value.length < 6) {
-                    return 'Пароль должен быть не менее 6 символов';
-                  }
-                  return null;
-                },
-              ),
-              const SizedBox(height: 16),
-              // Подтверждение пароля
-              TextFormField(
-                controller: _confirmPasswordController,
-                obscureText: true,
-                decoration: const InputDecoration(
-                  hintText: "Подтвердите пароль",
-                  border: OutlineInputBorder(),
-                  labelText: 'Подтверждение пароля',
-                ),
-                validator: (value) {
-                  if (value == null || value.isEmpty) {
-                    return 'Подтвердите пароль';
-                  }
-                  if (value != _passwordController.text) {
-                    return 'Пароли не совпадают';
-                  }
-                  return null;
-                },
-              ),
-              const SizedBox(height: 16),
-              // Дата рождения
-              TextFormField(
-                controller: _dateController,
-                readOnly: true,
-                decoration: const InputDecoration(
-                  hintText: "Дата рождения",
-                  border: OutlineInputBorder(),
-                  labelText: 'Дата рождения',
-                  suffixIcon: Icon(Icons.calendar_today),
-                ),
-                onTap: () async {
-                  final DateTime? pickedDate = await showDatePicker(
-                    context: context,
-                    initialDate: DateTime(2000),
-                    firstDate: DateTime(1920),
-                    lastDate: DateTime.now(),
-                  );
 
-                  if (pickedDate != null) {
-                    setState(() {
-                      _selectedDate = pickedDate;
-                      _dateController.text =
-                          "${pickedDate.day}/${pickedDate.month}/${pickedDate.year}";
-                    });
-                  }
-                },
-                validator: (value) {
-                  if (value == null || value.isEmpty) {
-                    return 'Выберите дату рождения';
-                  }
-                  return null;
-                },
+              // Пароль
+              ConstrainedBox(
+                constraints: const BoxConstraints(
+                  minHeight: 72,
+                ),
+                child: TextFormField(
+                  controller: _passwordController,
+                  // obscureText: _showPassWorld,
+                  decoration: const InputDecoration(
+                    hintText: "Введите пароль",
+                    border: OutlineInputBorder(),
+                    labelText: 'Пароль',
+                  ),
+                  validator: (value) {
+                    if (value == null || value.isEmpty) {
+                      return 'Введите пароль';
+                    }
+                    if (value.length < 6) {
+                      return 'Пароль должен быть не менее 6 символов';
+                    }
+                    return null;
+                  },
+                ),
               ),
-              const SizedBox(height: 32),
+
+              // Дата рождения
+              ConstrainedBox(
+                constraints: const BoxConstraints(
+                  minHeight: 72,
+                ),
+                child: TextFormField(
+                  controller: _dateController,
+                  inputFormatters: [FilteringTextInputFormatter.digitsOnly],
+                  decoration: InputDecoration(
+                    hintText: "Дата рождения",
+                    border: const OutlineInputBorder(),
+                    labelText: 'Дата рождения',
+                    suffixIcon: IconButton(
+                      icon: const Icon(Icons.calendar_today),
+                      onPressed: () async {
+                        final DateTime? pickedDate = await showDatePicker(
+                          context: context,
+                          initialDate: _selectedDate ?? DateTime.now(),
+                          firstDate: DateTime(1920),
+                          lastDate: DateTime.now(),
+                        );
+
+                        if (pickedDate != null) {
+                          setState(() {
+                            _selectedDate = pickedDate;
+                            _dateController.text =
+                                "${pickedDate.day.toString().padLeft(2, '0')}.${pickedDate.month.toString().padLeft(2, '0')}.${pickedDate.year}";
+                          });
+                        }
+                      },
+                    ),
+                  ),
+                  keyboardType: TextInputType.datetime,
+                  validator: (value) {
+                    if (value == null || value.isEmpty) {
+                      return 'Введите или выберите дату рождения';
+                    }
+                    final parts = value.split('.');
+                    final day = int.tryParse(parts[0]);
+                    final month = int.tryParse(parts[1]);
+                    final year = int.tryParse(parts[2]);
+                    if (day == null ||
+                        day < 1 ||
+                        day > 31 ||
+                        month == null ||
+                        month < 1 ||
+                        month > 12 ||
+                        year == null ||
+                        year < 1900 ||
+                        year > DateTime.now().year) {
+                      return ' Некорректная дата';
+                    }
+                  },
+                ),
+              ),
+              const SizedBox(height: 16),
 
               // Кнопка регистрации
               Row(
@@ -256,7 +297,7 @@ class _UserEditState extends State<UserEdit> {
                     onPressed: () {
                       Navigator.of(context).pop();
                     },
-                    child: Text('Назад'),
+                    child: const Text('Назад'),
                   ),
                   ElevatedButton(
                     onPressed: () async {

@@ -7,7 +7,7 @@ import 'package:flutter_application_1/navigation/navigator.dart';
 final _formKey = GlobalKey<FormState>(); // создание ключа для формы
 
 class LoginForm extends StatefulWidget {
-  LoginForm({super.key});
+  const LoginForm({super.key});
 
   @override
   State<LoginForm> createState() => _LoginFormState();
@@ -97,6 +97,7 @@ class _LoginFormState extends State<LoginForm> {
                         tokenService.saveToken(token);
 
                         AppNavigator.openHome();
+                      // ignore: empty_catches
                       } catch (e) {}
                     },
                     child: const Text('Войти'),
