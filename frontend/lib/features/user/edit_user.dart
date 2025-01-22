@@ -295,7 +295,7 @@ class _UserEditState extends State<UserEdit> {
                 children: [
                   ElevatedButton(
                     onPressed: () {
-                      Navigator.of(context).pop();
+                      Navigator.of(context).pop(false);
                     },
                     child: const Text('Назад'),
                   ),
@@ -326,7 +326,10 @@ class _UserEditState extends State<UserEdit> {
                         if (!response.isSuccessful) {
                           return;
                         }
-                      } catch (_) {}
+                      } catch (_) {
+                        if (context.mounted) Navigator.of(context).pop(false);
+                        return;
+                      }
                       if (context.mounted) Navigator.of(context).pop(true);
                     },
                     child: const Text("Сохранить"),

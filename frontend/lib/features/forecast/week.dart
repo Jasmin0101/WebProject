@@ -3,7 +3,12 @@ import 'package:flutter_application_1/core/api/chopper.dart';
 import 'package:flutter_application_1/core/api/services/forecast.dart';
 
 class WeekForecast extends StatefulWidget {
-  const WeekForecast({super.key});
+  final int? cityId;
+
+  const WeekForecast({
+    super.key,
+    this.cityId,
+  });
 
   @override
   State<WeekForecast> createState() => _WeekForecastState();
@@ -16,9 +21,10 @@ class _WeekForecastState extends State<WeekForecast> {
 
   Future<void> _fetchForecastWeek() async {
     try {
-      final response = await api
-          .getService<ForecastService>()
-          .forecastWeek("2023-01-01 14:34");
+      final response = await api.getService<ForecastService>().forecastWeek(
+            "2023-01-01 14:34",
+            city: widget.cityId?.toString(),
+          );
       if (response.isSuccessful) {
         setState(() {
           _forecastDataWeek = Map<String, dynamic>.from(response.body);

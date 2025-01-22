@@ -57,12 +57,8 @@ def me_edit(request: HttpRequest, user: User) -> HttpResponse:
             {"error": "All fields (name, surname, city, dob) are required."},
             status=400,
         )
-    
-    if  not city.isdigit():
-          return JsonResponse(
-            {"error": "Invalid city id "},
-            status=400,
-        )
+
+    city = City.objects.get(id=city)
 
     user.name = name
     user.surname = surname

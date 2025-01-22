@@ -19,6 +19,10 @@ class _UserWidgetState extends State<UserWidget> {
   // Метод для получения данных пользователя с бэкенда
   Future<void> _fetchUser() async {
     try {
+      setState(() {
+        _isLoading = true;
+      });
+
       final response = await api.getService<UserService>().userMeView();
       if (response.isSuccessful && response.body != null) {
         setState(() {
@@ -104,8 +108,15 @@ class _UserWidgetState extends State<UserWidget> {
             if (_userData != null)
               Expanded(
                 child: ElevatedButton(
-                  onPressed: () {
-                    UserEdit.showUserDialog(context, _userData ?? {});
+                  onPressed: () async {
+                    final result = await UserEdit.showUserDialog(
+                      context,
+                      _userData ?? {},
+                    );
+
+                    if (result == true && context.mounted) {
+                      _fetchUser();
+                    }
                   },
                   child: const Text('Редактировать'),
                 ),

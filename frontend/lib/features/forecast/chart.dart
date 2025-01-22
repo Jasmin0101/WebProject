@@ -8,7 +8,12 @@ import 'package:flutter_application_1/core/api/services/forecast.dart';
 import 'package:http/http.dart' as http;
 
 class ChartForecast extends StatefulWidget {
-  const ChartForecast({super.key});
+  final int? cityId;
+
+  const ChartForecast({
+    super.key,
+    this.cityId,
+  });
 
   @override
   State<ChartForecast> createState() => _ChartForecastState();
@@ -25,9 +30,10 @@ class _ChartForecastState extends State<ChartForecast> {
 
     try {
       // Вот тут надо поменять на настоящий запрос
-      final response = await api
-          .getService<ForecastService>()
-          .forecastToday24('2023-01-01 14:00');
+      final response = await api.getService<ForecastService>().forecastToday24(
+            '2023-01-01 14:00',
+            city: widget.cityId?.toString(),
+          );
 
       if (response.isSuccessful) {
         final responseData = response.body['forecasts'] as List<dynamic>;
