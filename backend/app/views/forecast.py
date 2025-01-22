@@ -1,22 +1,22 @@
+import json
 from datetime import datetime, timedelta
 
-import json
+from django.contrib.auth.hashers import check_password, make_password
 from django.http import (
     HttpRequest,
+    HttpResponse,
     HttpResponseBadRequest,
     HttpResponseNotAllowed,
     JsonResponse,
-    HttpResponse,
 )
 from django.views.decorators.csrf import csrf_exempt
-from django.contrib.auth.hashers import check_password, make_password
-from app.decorator import require_login
-from app.models import *
-
-from rest_framework_simplejwt.tokens import RefreshToken, AccessToken
+from django.views.decorators.http import require_http_methods
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.permissions import IsAuthenticated
-from django.views.decorators.http import require_http_methods
+from rest_framework_simplejwt.tokens import AccessToken, RefreshToken
+
+from app.decorator import require_login
+from app.models import *
 
 
 @csrf_exempt
@@ -68,7 +68,6 @@ def week(request: HttpRequest, user: User) -> HttpResponse:
             return JsonResponse(
                 {"error": "Missing 'city' or 'date' parameter"}, status=400
             )
-        print(start_date_str)
 
         # Преобразуем дату из строки в объект datetime
         try:

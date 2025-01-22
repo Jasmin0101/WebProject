@@ -57,23 +57,25 @@ final GoRouter router = GoRouter(
             ? DateTime.now()
             : DateFormat('yyyy-MM-dd').parse(dateStr);
 
+        final cityIdStr = state.uri.queryParameters[QueriesName.cityId];
+        final cityId = int.tryParse(cityIdStr ?? "");
+
         return FadeTransitionPage(
           key: state.pageKey,
           child: HomePage(
-            date: date, // Исправлено использование параметра
-            city: City
-                .khabarovsk, // Статичный пример, можно изменить на динамический
+            cityId: cityId,
+            date: date,
           ),
         );
       },
       routes: [
         GoRoute(
           path:
-              "${RoutesName.weather}/:${QueriesName.city}/:${QueriesName.date}",
+              "${RoutesName.weather}/:${QueriesName.cityId}/:${QueriesName.date}",
           name: RoutesName.weather,
           pageBuilder: (context, state) {
             // Получаем параметры маршрута
-            final cityName = state.pathParameters[QueriesName.city];
+            final cityName = state.pathParameters[QueriesName.cityId];
             final dateStr = state.pathParameters[QueriesName.date];
 
             // Обработка параметров
