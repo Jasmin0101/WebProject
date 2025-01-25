@@ -1,5 +1,5 @@
-from django.db import models
 from django.contrib.auth.hashers import make_password
+from django.db import models
 
 
 class City(models.Model):
@@ -29,28 +29,100 @@ class User(models.Model):
         return self.login or "Unnamed User"
 
 
+class ApplicationStatus(models.TextChoices):
+    WAITING = "WA", "Ожидает рассмотрения"
+    WORKING = "WO", "В работе"
+    INFORMATION_REQUIRED = "IR", "Требуется информация"
+    COMPLETED = "CO", "Завершено"
+
+
 class Application(models.Model):
 
-    STATUS_CHOICE = {
-        "SEND": "Отправленно",
-        "READ": "Прочитано",
-        "RECEIVED": "Получено",
-        "REJECTED": "Отклонено",
-    }
-
     status = models.CharField(
-        max_length=30,
-        choices=STATUS_CHOICE,
-        default="SEND",
+        max_length=2,
+        choices=ApplicationStatus.choices,
+        default=ApplicationStatus.WAITING,
     )
 
     id = models.BigAutoField(primary_key=True)
     title = models.CharField(max_length=255)
-    text = models.TextField()
     date_created = models.DateTimeField(auto_now_add=True)
+    total_attachments = models.IntegerField(default=0)
     author = models.ForeignKey(
-        User, on_delete=models.CASCADE, related_name="applications"
+        User,
+        on_delete=models.CASCADE,
+        related_name="applications",
     )
+
+
+class TextApplicationAttachments(models.Model):
+
+    id = models.BigAutoField(primary_key=True)
+    number_in_order = models.IntegerField()
+    author = models.ForeignKey(
+        User,
+        on_delete=models.CASCADE,
+        related_name="text_attachments",
+    )
+    application = models.ForeignKey(
+        Application,
+        on_delete=models.CASCADE,
+        related_name="text_attachments",
+    )
+    text = models.TextField()
+
+    def toDTO(self):
+        return {
+            "id": self.id,
+            "type": "text",
+            "author": self.author.id,
+            "text": self.text,
+        }
+
+
+class InfoApplicationAttachments(models.Model):
+
+    id = models.BigAutoField(primary_key=True)
+    number_in_order = models.IntegerField()
+
+    application = models.ForeignKey(
+        Application,
+        on_delete=models.CASCADE,
+        related_name="info_attachments",
+    )
+    info = models.TextField()
+
+    def toDTO(self):
+        return {
+            "id": self.id,
+            "type": "info",
+            "info": self.info,
+        }
+
+
+class FileApplicationAttachments(models.Model):
+
+    id = models.BigAutoField(primary_key=True)
+    number_in_order = models.IntegerField()
+    author = models.ForeignKey(
+        User,
+        on_delete=models.CASCADE,
+        related_name="file_attachments",
+    )
+    application = models.ForeignKey(
+        Application,
+        on_delete=models.CASCADE,
+        related_name="file_attachments",
+    )
+    file = models.FileField()
+
+    def toDTO(self):
+        return {
+            "id": self.id,
+            "type": "file",
+            "author": self.author.id,
+            "file": self.file.url,
+        }
 
 
 class Forecast(models.Model):
@@ -61,8 +133,6 @@ class Forecast(models.Model):
 
     date = models.DateField(null=True)
     time = models.TimeField(null=True)
-    max_temp = models.FloatField(null=True)
-    min_temp = models.FloatField(null=True)
 
     temperature = models.FloatField(null=True)
     conditions = models.CharField(max_length=255, null=True)

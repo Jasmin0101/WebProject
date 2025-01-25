@@ -28,12 +28,7 @@ class UserPage extends StatelessWidget {
           // Отступ между AppBar и изображением
           Expanded(
             child: Center(
-              child: ConstrainedBox(
-                constraints: const BoxConstraints(
-                  maxWidth: 360,
-                ),
-                child: const UserWidget(),
-              ),
+              child: const UserWidget(),
             ),
           ),
         ],

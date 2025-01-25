@@ -4,6 +4,8 @@ import 'package:flutter_localizations/flutter_localizations.dart';
 
 import 'navigation/router.dart';
 
+const double maxAppWidth = 480;
+
 Future<void> main() async {
   await tokenService.init();
   runApp(const App());
@@ -39,6 +41,30 @@ class App extends StatelessWidget {
         ),
       ),
       themeMode: ThemeMode.system,
+      builder: (context, child) => Material(
+        child: Stack(
+          alignment: Alignment.center,
+          children: [
+            Container(
+              margin: EdgeInsets.all(
+                MediaQuery.sizeOf(context).width > maxAppWidth ? 8 : 0,
+              ),
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(
+                  MediaQuery.sizeOf(context).width > maxAppWidth ? 10 : 0,
+                ),
+              ),
+              clipBehavior: Clip.antiAlias,
+              child: ConstrainedBox(
+                constraints: const BoxConstraints(
+                  maxWidth: maxAppWidth,
+                ),
+                child: child,
+              ),
+            ),
+          ],
+        ),
+      ),
     );
   }
 }

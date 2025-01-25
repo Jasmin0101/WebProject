@@ -48,42 +48,25 @@ class HomePage extends StatelessWidget {
         ],
       ),
       body: Center(
-        child: ConstrainedBox(
-          constraints: const BoxConstraints(
-            maxWidth: 720,
-          ),
-          child: ListView(
-            padding: const EdgeInsets.all(24),
-            children: [
-              // Row(
-              //   children: [
-              //     CurrentForecast(),
-              //     // DateSelector(currentDate: DateTime.now)
-              //   ],
-              // ),
-              CurrentForecast(
-                cityId: cityId,
-              ),
-              const SizedBox(
-                height: 32,
-              ),
-              WeekForecast(
-                cityId: cityId,
-              ),
-              const SizedBox(
-                height: 8,
-              ),
-              ChartForecast(
-                cityId: cityId,
-              ),
-              const SizedBox(
-                height: 32,
-              ),
-              CitySelector(
-                selectedCity: cityId,
-              ),
-            ],
-          ),
+        child: ListView(
+          padding: const EdgeInsets.all(24),
+          children: [
+            const CurrentForecast(),
+            const SizedBox(
+              height: 32,
+            ),
+            const WeekForecast(),
+            const SizedBox(
+              height: 8,
+            ),
+            const ChartForecast(),
+            const SizedBox(
+              height: 32,
+            ),
+            CitySelector(
+              selectedCity: cityId,
+            ),
+          ],
         ),
       ),
     );

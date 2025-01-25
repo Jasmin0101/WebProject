@@ -121,8 +121,8 @@ def week(request: HttpRequest, user: User) -> HttpResponse:
             forecast_list.append(
                 {
                     "date": key.strftime("%Y-%m-%d"),
-                    "max_temp": forecast_dict[key].max_temp,
-                    "min_temp": forecast_dict[key].max_temp,
+                    "max_temp": forecast_dict[key].temperature,
+                    "min_temp": forecast_dict[key].temperature,
                     "conditions": forecast_dict[key].conditions,
                     "day_name": which_weekday(start_date, key),
                 }
