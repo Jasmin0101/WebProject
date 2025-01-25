@@ -1,0 +1,129 @@
+{
+  "tables": [
+    {
+      "name": "app_application",
+      "columns": [
+        {
+          "name": "id",
+          "type": "integer",
+          "constraints": ["NOT NULL", "PRIMARY KEY", "AUTOINCREMENT"]
+        },
+        {
+          "name": "title",
+          "type": "varchar(255)",
+          "constraints": ["NOT NULL"]
+        },
+        { "name": "text", "type": "text", "constraints": ["NOT NULL"] },
+        {
+          "name": "date_created",
+          "type": "datetime",
+          "constraints": ["NOT NULL"]
+        },
+        {
+          "name": "author_id",
+          "type": "bigint",
+          "constraints": [
+            "NOT NULL",
+            "REFERENCES app_user(id)",
+            "DEFERRABLE INITIALLY DEFERRED"
+          ]
+        },
+        { "name": "status", "type": "varchar(30)", "constraints": ["NOT NULL"] }
+      ]
+    },
+    {
+      "name": "app_city",
+      "columns": [
+        {
+          "name": "id",
+          "type": "integer",
+          "constraints": ["NOT NULL", "PRIMARY KEY", "AUTOINCREMENT"]
+        },
+        {
+          "name": "city_en",
+          "type": "varchar(200)",
+          "constraints": ["NOT NULL"]
+        },
+        { "name": "city", "type": "varchar(200)", "constraints": ["NULL"] }
+      ]
+    },
+    {
+      "name": "app_forecast",
+      "columns": [
+        {
+          "name": "id",
+          "type": "integer",
+          "constraints": ["NOT NULL", "PRIMARY KEY", "AUTOINCREMENT"]
+        },
+        { "name": "date", "type": "date", "constraints": ["NULL"] },
+        { "name": "time", "type": "time", "constraints": ["NULL"] },
+        { "name": "temperature", "type": "real", "constraints": ["NULL"] },
+        {
+          "name": "conditions",
+          "type": "varchar(255)",
+          "constraints": ["NULL"]
+        },
+        { "name": "pressure", "type": "real", "constraints": ["NULL"] },
+        { "name": "humidity", "type": "real", "constraints": ["NULL"] },
+        {
+          "name": "city_id",
+          "type": "bigint",
+          "constraints": [
+            "NOT NULL",
+            "REFERENCES app_city(id)",
+            "DEFERRABLE INITIALLY DEFERRED"
+          ]
+        },
+        { "name": "max_temp", "type": "real", "constraints": ["NULL"] },
+        { "name": "min_temp", "type": "real", "constraints": ["NULL"] },
+        { "name": "wind_speed", "type": "real", "constraints": ["NULL"] }
+      ]
+    },
+    {
+      "name": "app_user",
+      "columns": [
+        {
+          "name": "id",
+          "type": "integer",
+          "constraints": ["NOT NULL", "PRIMARY KEY", "AUTOINCREMENT"]
+        },
+        { "name": "password", "type": "varchar(255)", "constraints": ["NULL"] },
+        { "name": "dob", "type": "date", "constraints": ["NULL"] },
+        { "name": "login", "type": "varchar(180)", "constraints": ["NULL"] },
+        { "name": "name", "type": "varchar(255)", "constraints": ["NULL"] },
+        { "name": "surname", "type": "varchar(255)", "constraints": ["NULL"] },
+        {
+          "name": "email",
+          "type": "varchar(255)",
+          "constraints": ["NOT NULL"]
+        },
+        {
+          "name": "city_id",
+          "type": "bigint",
+          "constraints": [
+            "NOT NULL",
+            "REFERENCES app_city(id)",
+            "DEFERRABLE INITIALLY DEFERRED"
+          ]
+        }
+      ]
+    }
+  ],
+  "indexes": [
+    {
+      "name": "app_application_author_id_f37ab6c7",
+      "table": "app_application",
+      "columns": ["author_id"]
+    },
+    {
+      "name": "app_forecast_city_id_dc312c65",
+      "table": "app_forecast",
+      "columns": ["city_id"]
+    },
+    {
+      "name": "app_user_city_id_9146115c",
+      "table": "app_user",
+      "columns": ["city_id"]
+    }
+  ]
+}

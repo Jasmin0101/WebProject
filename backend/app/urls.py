@@ -63,12 +63,12 @@ urlpatterns = [
         name="cities_view",
     ),
     path(
-        "forecast/today/",
+        "forecast/today",
         forecast.today,
         name="today",
     ),
     path(
-        "forecast/week/",
+        "forecast/week",
         forecast.week,
         name="week",
     ),
