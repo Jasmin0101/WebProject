@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_application_1/core/api/services/application.dart';
+import 'package:flutter_application_1/features/application/image_add.dart';
 import 'package:flutter_application_1/features/application/messages.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:http/http.dart';
@@ -39,36 +40,6 @@ class _ApplicationInputFieldState extends State<ApplicationInputField> {
       _isLoading = false;
       setState(() {});
     } catch (error) {}
-  }
-
-  Future<void> _uploadFile() async {
-    final ImagePicker picker = ImagePicker();
-    final XFile? image = await picker.pickImage(source: ImageSource.gallery);
-    final service = api.getService<ApplicationService>();
-
-    if (image == null) {
-      return;
-    }
-    final imageBytes = await image.readAsBytes();
-
-    // Decode image bytes
-    final decodedImage = img.decodeImage(imageBytes);
-    if (decodedImage == null) return;
-
-    // Encode to WebP
-    final webpBytes = img.encodeJpg(decodedImage, quality: 10);
-
-    try {
-      final file = MultipartFile.fromBytes(
-        'file',
-        webpBytes,
-        filename: image.name,
-      );
-      service.uploadFile(
-        int.tryParse(widget.applicationId) ?? -1,
-        file,
-      );
-    } catch (e) {}
   }
 
   @override
@@ -155,12 +126,9 @@ class _ApplicationInputFieldState extends State<ApplicationInputField> {
                     },
                     icon: Icon(Icons.send),
                   ),
-                  IconButton(
-                    onPressed: () async {
-                      _uploadFile();
-                    },
-                    icon: Icon(Icons.attach_file),
-                  )
+                  ImageAddButton(
+                    applicationId: widget.applicationId,
+                  ),
                 ],
               ),
             ),

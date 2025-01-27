@@ -67,7 +67,7 @@ final GoRouter router = GoRouter(
         return FadeTransitionPage(
           key: state.pageKey,
           child: HomePage(
-            key: ValueKey(cityId),
+            key: ValueKey(cityId ?? 0 + date.microsecondsSinceEpoch),
             cityId: cityId,
             date: date,
           ),

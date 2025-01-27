@@ -95,11 +95,25 @@ class _LoginFormState extends State<LoginForm> {
                             .login(login, password);
 
                         if (!response.isSuccessful) {
-                          if (response.error == 'User not found.') {}
-                          if (response.error == 'Invalid password.') {}
+                          if (response.error == 'User not found.') {
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              const SnackBar(
+                                  content: Text('Пользователь не найден')),
+                            );
+                          }
+                          if (response.error == 'Invalid password.') {
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              const SnackBar(
+                                  content: Text('Неверный логин или пароль')),
+                            );
+                          }
                           return;
                         }
 
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          const SnackBar(
+                              content: Text('Вход выполнен успешно')),
+                        );
                         final token = response.body['access_token'];
                         tokenService.saveToken(token);
 

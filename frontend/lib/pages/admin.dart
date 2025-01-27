@@ -16,6 +16,12 @@ class AdminPage extends StatelessWidget {
       appBar: AppBar(
         title: const Text("Список заявок"),
         actions: [
+          IconButton(
+            icon: const Icon(Icons.account_circle),
+            onPressed: () {
+              AppNavigator.openAdminProfile();
+            },
+          ),
           PopupMenuButton<int>(
             initialValue: switch (status) {
               "WA" => 1,

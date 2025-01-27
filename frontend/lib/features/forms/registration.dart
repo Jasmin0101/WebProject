@@ -91,7 +91,7 @@ class _RegistrationFormState extends State<RegistrationForm> {
               // Имя
               ConstrainedBox(
                 constraints: const BoxConstraints(
-                  minHeight: 72,
+                  minHeight: 88,
                 ),
                 child: TextFormField(
                   controller: _nameController,
@@ -100,6 +100,9 @@ class _RegistrationFormState extends State<RegistrationForm> {
                     border: OutlineInputBorder(),
                     labelText: 'Имя',
                   ),
+                  inputFormatters: [
+                    FilteringTextInputFormatter.deny(RegExp(r'\s')),
+                  ],
                   validator: (value) {
                     if (value == null || value.isEmpty) {
                       return 'Введите имя';
@@ -111,7 +114,7 @@ class _RegistrationFormState extends State<RegistrationForm> {
               // Фамилия
               ConstrainedBox(
                 constraints: const BoxConstraints(
-                  minHeight: 72,
+                  minHeight: 88,
                 ),
                 child: TextFormField(
                   controller: _surnameController,
@@ -120,6 +123,9 @@ class _RegistrationFormState extends State<RegistrationForm> {
                     border: OutlineInputBorder(),
                     labelText: 'Фамилия',
                   ),
+                  inputFormatters: [
+                    FilteringTextInputFormatter.deny(RegExp(r'\s')),
+                  ],
                   validator: (value) {
                     if (value == null || value.isEmpty) {
                       return 'Введите фамилию';
@@ -132,7 +138,7 @@ class _RegistrationFormState extends State<RegistrationForm> {
               // Email
               ConstrainedBox(
                 constraints: const BoxConstraints(
-                  minHeight: 72,
+                  minHeight: 88,
                 ),
                 child: TextFormField(
                   controller: _emailController,
@@ -141,6 +147,9 @@ class _RegistrationFormState extends State<RegistrationForm> {
                     border: OutlineInputBorder(),
                     labelText: 'Email',
                   ),
+                  inputFormatters: [
+                    FilteringTextInputFormatter.deny(RegExp(r'\s')),
+                  ],
                   keyboardType: TextInputType.emailAddress,
                   validator: (value) {
                     if (value == null || value.isEmpty) {
@@ -158,7 +167,7 @@ class _RegistrationFormState extends State<RegistrationForm> {
 
               ConstrainedBox(
                 constraints: const BoxConstraints(
-                  minHeight: 72,
+                  minHeight: 88,
                 ),
                 child: DropdownMenu<int>(
                   expandedInsets: const EdgeInsets.only(top: 8, bottom: 8),
@@ -183,7 +192,7 @@ class _RegistrationFormState extends State<RegistrationForm> {
               // Логин
               ConstrainedBox(
                 constraints: const BoxConstraints(
-                  minHeight: 72,
+                  minHeight: 88,
                 ),
                 child: TextFormField(
                   controller: _loginController,
@@ -192,6 +201,9 @@ class _RegistrationFormState extends State<RegistrationForm> {
                     border: OutlineInputBorder(),
                     labelText: 'Логин',
                   ),
+                  inputFormatters: [
+                    FilteringTextInputFormatter.deny(RegExp(r'\s')),
+                  ],
                   validator: (value) {
                     if (value == null || value.isEmpty) {
                       return 'Введите логин';
@@ -207,11 +219,14 @@ class _RegistrationFormState extends State<RegistrationForm> {
               // Пароль
               ConstrainedBox(
                 constraints: const BoxConstraints(
-                  minHeight: 72,
+                  minHeight: 88,
                 ),
                 child: TextFormField(
                   controller: _passwordController,
                   obscureText: _showPassWorld,
+                  inputFormatters: [
+                    FilteringTextInputFormatter.deny(RegExp(r'\s')),
+                  ],
                   decoration: const InputDecoration(
                     hintText: "Введите пароль",
                     border: OutlineInputBorder(),
@@ -224,6 +239,27 @@ class _RegistrationFormState extends State<RegistrationForm> {
                     if (value.length < 6) {
                       return 'Пароль должен быть не менее 6 символов';
                     }
+
+                    // Check for uppercase letters
+                    if (!RegExp(r'[A-Z]').hasMatch(value)) {
+                      return 'Пароль должен содержать заглавную букву';
+                    }
+
+                    // Check for lowercase letters
+                    if (!RegExp(r'[a-z]').hasMatch(value)) {
+                      return 'Пароль должен содержать строчную букву';
+                    }
+
+                    // Check for numbers
+                    if (!RegExp(r'[0-9]').hasMatch(value)) {
+                      return 'Пароль должен содержать цифру';
+                    }
+
+                    // Check for special characters
+                    if (!RegExp(r'[!@#$%^&*(),.?":{}|<>]').hasMatch(value)) {
+                      return 'Пароль должен содержать специальный символ';
+                    }
+
                     return null;
                   },
                 ),
@@ -232,11 +268,14 @@ class _RegistrationFormState extends State<RegistrationForm> {
               // Подтверждение пароля
               ConstrainedBox(
                 constraints: const BoxConstraints(
-                  minHeight: 72,
+                  minHeight: 88,
                 ),
                 child: TextFormField(
                   controller: _confirmPasswordController,
                   obscureText: true,
+                  inputFormatters: [
+                    FilteringTextInputFormatter.deny(RegExp(r'\s')),
+                  ],
                   decoration: const InputDecoration(
                     hintText: "Подтвердите пароль",
                     border: OutlineInputBorder(),
@@ -257,7 +296,7 @@ class _RegistrationFormState extends State<RegistrationForm> {
               // Дата рождения
               ConstrainedBox(
                 constraints: const BoxConstraints(
-                  minHeight: 72,
+                  minHeight: 88,
                 ),
                 child: TextFormField(
                   controller: _dateController,
@@ -307,6 +346,25 @@ class _RegistrationFormState extends State<RegistrationForm> {
                       return ' Некорректная дата';
                     }
                   },
+                  onChanged: (value) {
+                    if (value.length == 10) {
+                      final parts = value.split('.');
+                      final day = int.tryParse(parts[0]);
+                      final month = int.tryParse(parts[1]);
+                      final year = int.tryParse(parts[2]);
+                      if (day != null &&
+                          day >= 1 &&
+                          day <= 31 &&
+                          month != null &&
+                          month >= 1 &&
+                          month <= 12 &&
+                          year != null &&
+                          year >= 1900 &&
+                          year <= DateTime.now().year) {
+                        _selectedDate = DateTime(year, month, day);
+                      }
+                    }
+                  },
                 ),
               ),
               const SizedBox(height: 16),
@@ -325,6 +383,14 @@ class _RegistrationFormState extends State<RegistrationForm> {
                         return;
                       }
                       try {
+                        if (_selectedCityId == null) {
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            const SnackBar(
+                                content: Text('Выберите город проживания')),
+                          );
+                          return;
+                        }
+
                         final login = _loginController.text;
                         final name = _nameController.text;
                         final surname = _surnameController.text;
@@ -344,8 +410,34 @@ class _RegistrationFormState extends State<RegistrationForm> {
                                   DateFormat("yyyy-MM-dd").format(dob),
                                 );
                         if (!response.isSuccessful) {
+                          String errorMessage = 'Ошибка при регистрации';
+
+                          switch (response.error) {
+                            case "This login is already taken.":
+                              errorMessage = 'Этот логин уже занят';
+                              break;
+                            case "This email is already taken.":
+                              errorMessage = 'Этот email уже используется';
+                              break;
+                            case "This city is not exists.":
+                              errorMessage = 'Выбранный город не существует';
+                              break;
+                            case "Not all required fields are provided.":
+                              errorMessage = 'Заполните все обязательные поля';
+                              break;
+                          }
+
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(content: Text(errorMessage)),
+                          );
                           return;
                         }
+
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          const SnackBar(
+                              content: Text('Регистрация успешно завершена')),
+                        );
+
                         final token = response.body['access_token'];
                         tokenService.saveToken(token);
                         AppNavigator.openHome();

@@ -27,7 +27,7 @@ final class AppNavigator {
       _context.goNamed(
         RoutesName.home,
         queryParameters: {
-          QueriesName.cityId: cityId.toString(),
+          if (cityId != null) QueriesName.cityId: cityId.toString(),
           if (date != null)
             QueriesName.date: DateFormat("yyyy-MM-dd").format(date),
         },
@@ -68,6 +68,10 @@ final class AppNavigator {
         queryParameters: {
           if (status != null) QueriesName.applicationsStatus: status,
         },
+      );
+
+  static void openAdminProfile() => _context.goNamed(
+        RoutesName.adminProfile,
       );
 
   static void openAdminApplication(String applicationId, [String? status]) {

@@ -92,7 +92,7 @@ class _ActiveApplicationsWidgetState extends State<ActiveApplicationsWidget> {
           ),
         ),
       ),
-      floatingActionButton: FloatingActionButton(
+      floatingActionButton: FloatingActionButton.extended(
         onPressed: () async {
           final wasAdded =
               await ApplicationAddDialog.showApplicationDialog(context);
@@ -101,7 +101,8 @@ class _ActiveApplicationsWidgetState extends State<ActiveApplicationsWidget> {
             _pagingController.refresh();
           }
         },
-        child: const Icon(Icons.edit),
+        label: const Text('Создать заявку'),
+        icon: const Icon(Icons.edit),
       ),
     );
   }

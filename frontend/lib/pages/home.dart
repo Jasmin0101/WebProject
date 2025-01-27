@@ -3,6 +3,7 @@ import 'package:flutter_application_1/features/date_time/date_selector.dart';
 import 'package:flutter_application_1/features/forecast/chart.dart';
 import 'package:flutter_application_1/features/forecast/city_selector.dart';
 import 'package:flutter_application_1/features/forecast/current.dart';
+import 'package:flutter_application_1/features/forecast/date_selector.dart';
 import 'package:flutter_application_1/features/forecast/week.dart';
 
 import '../features/quiz/service.dart';
@@ -51,6 +52,10 @@ class HomePage extends StatelessWidget {
         child: ListView(
           padding: const EdgeInsets.all(24),
           children: [
+            DateSelector(
+              cityId: cityId,
+              selectedDate: date ?? DateTime.now(),
+            ),
             CurrentForecast(
               cityId: cityId,
               date: date ?? DateTime.now(),
