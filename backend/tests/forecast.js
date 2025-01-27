@@ -7,7 +7,7 @@ const PASSWORD = "testuser";
 
 // Load test options
 export let options = {
-  vus: 1, // Количество виртуальных пользователей
+  vus: 10000, // Количество виртуальных пользователей
   duration: "10s", // Длительность теста
   thresholds: {
     http_req_duration: ["p(95)<500"], // 95% запросов должны выполняться быстрее 500ms
@@ -99,7 +99,7 @@ function DateTime_generate() {
   const now = new Date();
   const year = now.getFullYear();
   const month = String(now.getMonth() + 1).padStart(2, "0");
-  const day = String(now.getDate()).padStart(2, "0");
+  const day = String(now.getDate() - 7).padStart(2, "0");
   const hours = String(now.getHours()).padStart(2, "0");
   const minutes = String(now.getMinutes()).padStart(2, "0");
 

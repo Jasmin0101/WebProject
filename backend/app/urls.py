@@ -5,8 +5,14 @@ import app.views.parser as parser
 import app.views.user as user
 from app.views import auth, forecast
 from app.views.application.urls import application_patterns
+from django.views.generic import TemplateView
 
 urlpatterns = [
+    path(
+        "swagger/",
+        TemplateView.as_view(template_name="swagger.html"),
+        name="swagger-ui",
+    ),
     path(
         "login",
         auth.login,

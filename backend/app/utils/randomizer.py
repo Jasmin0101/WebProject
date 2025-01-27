@@ -1,9 +1,20 @@
 import random
 from datetime import datetime, timedelta
-
 from django.utils.dateparse import parse_date, parse_time
-
 from app.models import City, Forecast
+
+
+def get_season(date):
+    """Возвращает сезон в зависимости от месяца."""
+    month = date.month
+    if month in [12, 1, 2]:
+        return "winter"
+    elif month in [3, 4, 5]:
+        return "spring"
+    elif month in [6, 7, 8]:
+        return "summer"
+    elif month in [9, 10, 11]:
+        return "autumn"
 
 
 def generate_random_weather_sql(
@@ -29,13 +40,27 @@ def generate_random_weather_sql(
             range_start + timedelta(days=i)
             for i in range((range_end - range_start).days + 1)
         ):
-            max_temp = random.uniform(
-                -10, 40
-            )  # Генерация температуры (пример: -10°C до 40°C)
-            min_temp = max_temp - random.uniform(
-                0, 15
-            )  # Минимальная температура меньше максимальной
-            conditions = random.choice(["Clear", "Cloudy", "Rain", "Snow", "Storm"])
+            # Определяем сезон
+            season = get_season(single_date)
+
+            # Генерация температуры и условий в зависимости от сезона
+            if season == "winter":
+                max_temp = random.uniform(-10, 5)
+                min_temp = max_temp - random.uniform(0, 10)
+                conditions = random.choice(["Clear", "Cloudy", "Snow", "Storm"])
+            elif season == "spring":
+                max_temp = random.uniform(5, 20)
+                min_temp = max_temp - random.uniform(0, 10)
+                conditions = random.choice(["Clear", "Cloudy", "Rain", "Windy"])
+            elif season == "summer":
+                max_temp = random.uniform(15, 40)
+                min_temp = max_temp - random.uniform(0, 10)
+                conditions = random.choice(["Clear", "Cloudy", "Rain", "Storm"])
+            elif season == "autumn":
+                max_temp = random.uniform(5, 15)
+                min_temp = max_temp - random.uniform(0, 5)
+                conditions = random.choice(["Clear", "Cloudy", "Rain", "Windy"])
+
             pressure = random.uniform(950, 1050)  # Давление в гПа
             humidity = random.uniform(10, 100)  # Влажность в процентах
             wind_speed = random.uniform(0, 20)  # Скорость ветра в м/с
@@ -59,9 +84,7 @@ def generate_random_weather_sql(
 
 
 def randomize():
-
     with open("randomize.sql", "w", encoding="utf-8") as file:
-
         file.write("-- SQL script to insert random weather data\n")
         for i in City.objects.all():
             generate_random_weather_sql(i.id, i.city_en, file)

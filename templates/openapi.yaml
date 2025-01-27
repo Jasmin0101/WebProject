@@ -1,0 +1,961 @@
+openapi: 3.0.3
+info:
+  title: WeatherApp API
+  version: 1.0.0
+  description: Для просмотра характеристик endpoints
+paths:
+  /login:
+    post:
+      summary: Авторизация пользователя
+      description: Авторизует пользователя по логину и паролю.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - login
+                - password
+              properties:
+                login:
+                  type: string
+                  description: Логин пользователя.
+                password:
+                  type: string
+                  description: Пароль пользователя.
+      responses:
+        '200':
+          description: Успешная авторизация.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Login successful.
+                  access_token:
+                    type: string
+                    description: Токен доступа пользователя.
+        '400':
+          description: Ошибка запроса (например, отсутствуют обязательные поля или неверные данные).
+          content:
+            application/json:
+              schema:
+                type: string
+                example: Login and password are required.
+  /registration:
+    post:
+      summary: Регистрация пользователя
+      description: Создает нового пользователя с указанными данными.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - login
+                - email
+                - name
+                - surname
+                - city
+                - dob
+                - password
+              properties:
+                login:
+                  type: string
+                  description: Логин пользователя.
+                email:
+                  type: string
+                  format: email
+                  description: Email пользователя.
+                name:
+                  type: string
+                  description: Имя пользователя.
+                surname:
+                  type: string
+                  description: Фамилия пользователя.
+                city:
+                  type: integer
+                  description: Идентификатор города.
+                dob:
+                  type: string
+                  format: date
+                  description: Дата рождения пользователя.
+                password:
+                  type: string
+                  description: Пароль пользователя.
+      responses:
+        '200':
+          description: Успешная регистрация.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Registration successful.
+                  access_token:
+                    type: string
+                    description: Токен доступа пользователя.
+        '400':
+          description: Ошибка запроса (например, логин или email уже существуют, либо город не найден).
+          content:
+            application/json:
+              schema:
+                type: string
+                example: This login is already taken.
+  /check-password:
+    post:
+      summary: Проверка текущего пароля
+      description: Проверяет, совпадает ли указанный пароль с текущим паролем пользователя.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - password
+              properties:
+                password:
+                  type: string
+                  description: Пароль для проверки.
+      responses:
+        '200':
+          description: Успешная проверка.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  currentPassword:
+                    type: boolean
+                    description: Результат проверки пароля.
+                    example: true
+        '400':
+          description: Ошибка запроса.
+          content:
+            application/json:
+              schema:
+                type: string
+                example: Invalid request data.
+                
+  /my-view:
+    get:
+      summary: Пример пустого эндпоинта
+      description: Заглушка для примера. Пока не содержит реализации.
+      responses:
+        '200':
+          description: Успешный вызов. Пока ничего не возвращает.
+        '401':
+          description: Неавторизованный доступ.
+
+  /today:
+    get:
+      summary: Прогноз погоды на сегодня
+      description: Возвращает прогноз погоды на сегодня для указанного города.
+      parameters:
+        - name: city
+          in: query
+          required: false
+          schema:
+            type: integer
+          description: ID города. Если не указан, берется город пользователя.
+        - name: time
+          in: query
+          required: true
+          schema:
+            type: string
+            format: date-time
+          description: Дата и время в формате ISO 8601 (например, `2025-01-27T15:00:00`).
+      responses:
+        '200':
+          description: Успешное получение прогноза.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  city:
+                    type: string
+                    description: Название города.
+                  temperature:
+                    type: number
+                    format: float
+                    description: Температура.
+                  weather_type:
+                    type: string
+                    description: Тип погоды.
+        '400':
+          description: Некорректный запрос (например, отсутствуют обязательные параметры).
+          content:
+            application/json:
+              schema:
+                type: string
+                example: Not all required fields are provided.
+        '404':
+          description: Прогноз не найден.
+          content:
+            application/json:
+              schema:
+                type: string
+                example: Forecast not found.
+
+  /week:
+    get:
+      summary: Прогноз погоды на неделю
+      description: Возвращает прогноз погоды на 7 дней для указанного города.
+      parameters:
+        - name: city
+          in: query
+          required: false
+          schema:
+            type: integer
+          description: ID города. Если не указан, берется город пользователя.
+        - name: time
+          in: query
+          required: true
+          schema:
+            type: string
+            format: date
+          description: Начальная дата недели в формате `YYYY-MM-DD`.
+      responses:
+        '200':
+          description: Успешное получение прогноза на неделю.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  forecasts:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        date:
+                          type: string
+                          format: date
+                          description: Дата прогноза.
+                        max_temp:
+                          type: number
+                          format: float
+                          description: Максимальная температура.
+                        min_temp:
+                          type: number
+                          format: float
+                          description: Минимальная температура.
+                        conditions:
+                          type: string
+                          description: Тип погоды.
+                        day_name:
+                          type: string
+                          description: Название дня недели.
+        '400':
+          description: Некорректный запрос.
+          content:
+            application/json:
+              schema:
+                type: string
+                example: Missing 'city' or 'date' parameter.
+        '500':
+          description: Внутренняя ошибка сервера.
+
+  /today24:
+    get:
+      summary: Прогноз погоды на 24 часа
+      description: Возвращает прогноз погоды на 24 часа для указанного города и даты.
+      parameters:
+        - name: city
+          in: query
+          required: false
+          schema:
+            type: integer
+          description: ID города. Если не указан, берется город пользователя.
+        - name: time
+          in: query
+          required: true
+          schema:
+            type: string
+            format: date
+          description: Дата в формате `YYYY-MM-DD`.
+      responses:
+        '200':
+          description: Успешное получение прогноза на 24 часа.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  city:
+                    type: integer
+                    description: ID города.
+                  date:
+                    type: string
+                    format: date
+                    description: Дата прогноза.
+                  forecasts:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        time:
+                          type: string
+                          format: time
+                          description: Время прогноза.
+                        temperature:
+                          type: number
+                          format: float
+                          description: Температура.
+        '400':
+          description: Некорректный запрос.
+          content:
+            application/json:
+              schema:
+                type: string
+                example: Missing 'city' or 'date' parameter.
+        '404':
+          description: Прогнозы не найдены.
+          content:
+            application/json:
+              schema:
+                type: string
+                example: No forecasts found for the specified city and date.
+        '500':
+          description: Внутренняя ошибка сервера.
+  /cities:
+    get:
+      summary: Получение списка городов
+      description: Возвращает список всех городов из базы данных.
+      responses:
+        '200':
+          description: Успешное получение списка городов.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    id:
+                      type: integer
+                      description: ID города.
+                    city:
+                      type: string
+                      description: Название города.
+        '400':
+          description: Некорректный запрос.
+          content:
+            application/json:
+              schema:
+                type: string
+                example: Not all required fields are provided.
+
+  /me:
+    get:
+      summary: Получение данных текущего пользователя
+      description: Возвращает данные профиля текущего пользователя.
+      responses:
+        '200':
+          description: Успешное получение данных пользователя.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  name:
+                    type: string
+                    description: Имя пользователя.
+                  surname:
+                    type: string
+                    description: Фамилия пользователя.
+                  city:
+                    type: string
+                    description: Название города пользователя.
+                  dob:
+                    type: string
+                    format: date
+                    description: Дата рождения пользователя.
+                  email:
+                    type: string
+                    description: Электронная почта пользователя.
+                  login:
+                    type: string
+                    description: Логин пользователя.
+                  city_id:
+                    type: integer
+                    description: ID города пользователя.
+        '401':
+          description: Неавторизованный доступ.
+
+  /me/edit:
+    post:
+      summary: Редактирование данных текущего пользователя
+      description: Позволяет редактировать данные профиля текущего пользователя.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                  description: Новое имя пользователя.
+                surname:
+                  type: string
+                  description: Новая фамилия пользователя.
+                city:
+                  type: integer
+                  description: ID нового города пользователя.
+                dob:
+                  type: string
+                  format: date
+                  description: Новая дата рождения пользователя.
+      responses:
+        '200':
+          description: Успешное обновление данных пользователя.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: User data updated successfully.
+        '400':
+          description: Некорректный запрос (например, отсутствуют обязательные поля).
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: All fields (name, surname, city, dob) are required.
+        '401':
+          description: Неавторизованный доступ.
+
+  /status:
+    get:
+      summary: Проверка статуса API
+      description: Возвращает статус API, общее количество пользователей и ID текущего пользователя.
+      responses:
+        '200':
+          description: Успешная проверка статуса.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  Status:
+                    type: string
+                    example: Ok
+                  Total_Users:
+                    type: string
+                    description: Общее количество пользователей.
+                  User_ID:
+                    type: integer
+                    description: ID текущего пользователя.
+        '500':
+          description: Внутренняя ошибка сервера.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  Status:
+                    type: string
+                    example: Bad
+                  error:
+                    type: string
+                    description: Описание ошибки.
+
+  /applications/admin:
+    get:
+      summary: Получение списка заявок для администратора
+      description: Возвращает список заявок с возможностью фильтрации по статусу и пагинацией. Только для авторизованных пользователей.
+      parameters:
+        - name: status
+          in: query
+          required: false
+          description: Фильтрация заявок по статусу.
+          schema:
+            type: string
+            example: completed
+        - name: page
+          in: query
+          required: true
+          description: Номер страницы для пагинации.
+          schema:
+            type: integer
+            example: 1
+      responses:
+        '200':
+          description: Успешное получение списка заявок.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  applications:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        id:
+                          type: integer
+                          description: ID заявки.
+                        date_created:
+                          type: string
+                          format: date-time
+                          description: Дата создания заявки.
+                        status:
+                          type: string
+                          description: Статус заявки.
+                        title:
+                          type: string
+                          description: Заголовок заявки.
+                        author:
+                          type: integer
+                          description: ID автора заявки.
+                  is_last_page:
+                    type: boolean
+                    description: Признак, является ли текущая страница последней.
+        '400':
+          description: Некорректный запрос (например, отсутствует параметр страницы или номер страницы меньше 1).
+          content:
+            application/json:
+                examples:
+                  no_page:
+                    value: Page parameter is required
+                  invalid_page:
+                    value: Page parameter must be greater than 0
+
+  /applications/close:
+    post:
+      summary: Закрытие заявки
+      description: Позволяет закрыть заявку администратору или автору. Только для авторизованных пользователей.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                application_id:
+                  type: integer
+                  description: ID заявки.
+                  example: 123
+      responses:
+        '200':
+          description: Успешное закрытие заявки.
+        '400':
+          description: Ошибка валидации или некорректный запрос.
+          content:
+            application/json:
+                examples:
+                  not_found:
+                    value: APPLICATION_NOT_FOUND
+                  access_denied:
+                    value: ACCESS_DENIED
+
+  /applications/create:
+    post:
+      summary: Создание новой заявки
+      description: Позволяет пользователю создать новую заявку. Только для авторизованных пользователей.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                title:
+                  type: string
+                  description: Заголовок заявки.
+                  example: "Моя новая заявка"
+      responses:
+        '200':
+          description: Успешное создание заявки.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: integer
+                    description: ID созданной заявки.
+        '400':
+          description: Некорректный запрос (например, отсутствует заголовок заявки).
+          content:
+            application/json:
+              schema:
+                type: string
+                example: TITLE_REQUIRED
+                
+  /applications/{application_id}/add-file:
+    post:
+      summary: Добавление файловых вложений к заявке
+      description: Позволяет пользователю или администратору загрузить файл и прикрепить его к заявке. Только для авторизованных пользователей.
+      parameters:
+        - name: application_id
+          in: path
+          required: true
+          description: ID заявки, к которой добавляется файл.
+          schema:
+            type: integer
+            example: 123
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                file:
+                  type: string
+                  format: binary
+                  description: Файл для загрузки.
+      responses:
+        '200':
+          description: Файл успешно добавлен.
+        '400':
+          description: Ошибка запроса (например, отсутствует `application_id` или ошибка загрузки файла).
+          content:
+            application/json:
+        
+                examples:
+                  application_id_required:
+                    value: APPLICATION_ID_REQUIRED
+                  not_found:
+                    value: APPLICATION_NOT_FOUND
+                  upload_error:
+                    value: FILE_UPLOAD_ERROR
+        '405':
+          description: Доступ запрещён (пользователь не автор заявки или не администратор).
+          content:
+            application/json:
+              schema:
+                type: string
+                example: ACCESS_DENIED
+
+  /attachments/{attachment_id}:
+    get:
+      summary: Получение файлового вложения
+      description: Позволяет загрузить файл по его ID. Только для авторизованных пользователей.
+      parameters:
+        - name: attachment_id
+          in: path
+          required: true
+          description: ID файлового вложения.
+          schema:
+            type: integer
+            example: 456
+      responses:
+        '200':
+          description: Файл успешно загружен.
+          content:
+            application/octet-stream:
+              schema:
+                type: string
+                format: binary
+        '403':
+          description: Доступ запрещён (пользователь не автор заявки или не администратор).
+          content:
+            application/json:
+              schema:
+                type: string
+                example: Access denied
+        '404':
+          description: Файл не найден.
+          content:
+            application/json:
+              schema:
+                type: string
+                example: File attachment not found
+        '500':
+          description: Ошибка сервера.
+          content:
+            application/json:
+              schema:
+                type: string
+                example: "Internal Server Error"
+
+  /applications/info-request:
+    post:
+      summary: Установить статус заявки "требуется информация"
+      description: Переводит заявку в статус "требуется информация". Только для администраторов.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                application_id:
+                  type: integer
+                  description: ID заявки.
+                  example: 123
+      responses:
+        '200':
+          description: Статус заявки успешно обновлён.
+        '400':
+          description: Ошибка запроса (например, заявка не найдена).
+          content:
+            application/json:
+                examples:
+                  not_found:
+                    value: APPLICATION_NOT_FOUND
+                  access_denied:
+                    value: ACCESS_DENIED
+
+  /applications/my:
+    get:
+      summary: Получение заявок текущего пользователя
+      description: Возвращает список заявок, созданных текущим пользователем, с возможностью фильтрации по статусу (активные или завершённые) и пагинацией.
+      parameters:
+        - name: active
+          in: query
+          required: false
+          description: Фильтрация по статусу заявок (активные или завершённые).
+          schema:
+            type: boolean
+            example: true
+        - name: page
+          in: query
+          required: true
+          description: Номер страницы для пагинации.
+          schema:
+            type: integer
+            example: 1
+      responses:
+        '200':
+          description: Успешное получение списка заявок.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  applications:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        id:
+                          type: integer
+                          description: ID заявки.
+                        date_created:
+                          type: string
+                          format: date-time
+                          description: Дата создания заявки.
+                        status:
+                          type: string
+                          description: Статус заявки.
+                        title:
+                          type: string
+                          description: Заголовок заявки.
+                        author:
+                          type: integer
+                          description: ID автора заявки.
+                  is_last_page:
+                    type: boolean
+                    description: Признак, является ли текущая страница последней.
+        '400':
+          description: Ошибка запроса (например, некорректный номер страницы).
+          content:
+            application/json:
+       
+                examples:
+                  no_page:
+                    value: Page parameter is required
+                  invalid_page:
+                    value: Page parameter must be greater than 0
+
+  /application:
+    get:
+      summary: Получить информацию о заявке
+      description: Возвращает информацию о заявке по её ID. Только для авторизованных пользователей.
+      parameters:
+        - name: application_id
+          in: query
+          required: true
+          description: ID заявки.
+          schema:
+            type: integer
+            example: 123
+      responses:
+        '200':
+          description: Успешно получена информация о заявке.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: integer
+                    description: ID заявки.
+                  date_created:
+                    type: string
+                    format: date-time
+                    description: Дата создания заявки.
+                  status:
+                    type: string
+                    description: Статус заявки.
+                  title:
+                    type: string
+                    description: Заголовок заявки.
+                  author:
+                    type: integer
+                    description: ID автора заявки.
+        '400':
+          description: Ошибка запроса (например, отсутствует `application_id` или заявка не найдена).
+          content:
+            application/json:
+             
+                examples:
+                  application_id_required:
+                    value: APPLICATION_ID_REQUIRED
+                  not_found:
+                    value: APPLICATION_NOT_FOUND
+        '405':
+          description: Доступ запрещён (пользователь не автор заявки или не администратор).
+          content:
+            application/json:
+              schema:
+                type: string
+                example: ACCESS_DENIED
+
+  /application/page:
+    get:
+      summary: Получить страницы вложений заявки
+      description: Возвращает страницу вложений заявки, включая текстовые, информационные и файловые вложения.
+      parameters:
+        - name: page
+          in: query
+          required: true
+          description: Номер страницы для вложений.
+          schema:
+            type: integer
+            example: 1
+        - name: application_id
+          in: query
+          required: true
+          description: ID заявки.
+          schema:
+            type: integer
+            example: 123
+      responses:
+        '200':
+          description: Успешное получение страницы вложений заявки.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  items:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        id:
+                          type: integer
+                          description: ID вложения.
+                        number_in_order:
+                          type: integer
+                          description: Порядковый номер вложения.
+                        text:
+                          type: string
+                          description: Текстовое содержание вложения (для текстовых вложений).
+                        info:
+                          type: string
+                          description: Информация о вложении (для информационных вложений).
+                        file:
+                          type: string
+                          format: binary
+                          description: Файл вложения (для файловых вложений).
+                  is_last_page:
+                    type: boolean
+                    description: Признак, является ли текущая страница последней.
+        '400':
+          description: Ошибка запроса (например, некорректный номер страницы или отсутствует `application_id`).
+          content:
+            application/json:
+           
+                examples:
+                  page_number_invalid:
+                    value: PAGE_NUMBER_INVALID
+                  application_id_required:
+                    value: APPLICATION_ID_REQUIRED
+                  not_found:
+                    value: APPLICATION_NOT_FOUND
+        '405':
+          description: Доступ запрещён (пользователь не автор заявки или не администратор).
+          content:
+            application/json:
+              schema:
+                type: string
+                example: ACCESS_DENIED
+
+  /application/text-attachment:
+    post:
+      summary: Добавить текстовое вложение к заявке
+      description: Добавляет текстовое вложение к заявке. Только для авторизованных пользователей.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                application_id:
+                  type: integer
+                  description: ID заявки.
+                  example: 123
+                text:
+                  type: string
+                  description: Текстовое вложение.
+                  example: "Текстовое содержание вложения"
+      responses:
+        '200':
+          description: Текстовое вложение успешно добавлено.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: integer
+                    description: ID вложения.
+                  text:
+                    type: string
+                    description: Текст вложения.
+                  author:
+                    type: integer
+                    description: ID автора вложения.
+                  number_in_order:
+                    type: integer
+                    description: Порядковый номер вложения.
+        '400':
+          description: Ошибка запроса (например, отсутствие текста или заявки).
+          content:
+            application/json:
+             
+                examples:
+                  application_id_required:
+                    value: APPLICATION_ID_REQUIRED
+                  text_required:
+                    value: TEXT_REQUIRED
+                  not_found:
+                    value: APPLICATION_NOT_FOUND
+        '405':
+          description: Доступ запрещён (пользователь не автор заявки или не администратор).
+          content:
+            application/json:
+              schema:
+                type: string
+                example: ACCESS_DENIED
+
