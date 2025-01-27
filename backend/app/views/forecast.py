@@ -31,7 +31,7 @@ def my_view(request: HttpRequest, user: User) -> HttpResponse:
 @require_http_methods(["GET"])
 @require_login
 def today(request: HttpRequest, user: User) -> HttpResponse:
-    print(request.GET.get("city", user.city.id), request.GET.get("time"))
+
     try:
         # Получаем параметры из GET-запроса
         city_id = request.GET.get("city", user.city.id)
@@ -44,7 +44,7 @@ def today(request: HttpRequest, user: User) -> HttpResponse:
 
         if not forecast:
             return JsonResponse({"error": "Forecast not found"}, status=404)
-
+        print(forecast.city.city, forecast.temperature, forecast.conditions)
         return JsonResponse(
             {
                 "city": forecast.city.city,

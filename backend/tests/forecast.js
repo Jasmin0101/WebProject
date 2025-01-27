@@ -1,14 +1,30 @@
 import http from "k6/http";
 import { check, sleep } from "k6";
 
-// Параметры для регистрации/логина
+// Parameters for registration/login
 const USERNAME = "testuser";
 const PASSWORD = "testuser";
 
-// URL для регистрации и логина
-const LOGIN_URL = "http://localhost:8000/login";
+// Load test options
+export let options = {
+  vus: 1, // Количество виртуальных пользователей
+  duration: "10s", // Длительность теста
+  thresholds: {
+    http_req_duration: ["p(95)<500"], // 95% запросов должны выполняться быстрее 500ms
+  },
+  ext: {
+    loadimpact: {
+      distribution: {
+        "amazon:fr:paris": { loadZone: "amazon:fr:paris", percent: 50 },
+      },
+    },
+  },
+};
 
-export default function () {
+// URL for login
+const LOGIN_URL = "http://127.0.0.1:8000/login";
+
+export function setup() {
   let loginRes = http.post(
     LOGIN_URL,
     JSON.stringify({
@@ -20,45 +36,69 @@ export default function () {
     }
   );
 
-  // Проверка, что логин прошёл успешно (например, получили статус 200 и токен)
-  check(loginRes, {
-    "login successful": (r) => r.status === 200 && r.json("access_token"),
+  // Check if login was successful
+  let loginSuccess = check(loginRes, {
+    "login successful": (r) =>
+      r.status === 200 && r.json() && r.json("access_token"),
   });
 
-  // Извлекаем токен из ответа
-  const token = loginRes.json("access_token");
+  if (!loginSuccess) {
+    console.error(
+      `Login failed: status ${loginRes.status}, body: ${loginRes.body}`
+    );
+    throw new Error("Login failed, cannot continue test");
+  }
 
-  // 2. Теперь делаем запрос с использованием токена
+  // Return the token to be used in the default function
+  return {
+    token: loginRes.json("access_token"),
+  };
+}
+
+export default function (data) {
+  // Access the token passed from the setup function
+  const TOKEN = data.token;
+
   const headers = {
-    auth: token, // Передаем токен в заголовках
+    auth: TOKEN, // Pass the token in headers
   };
 
-  // http.get(http.url`https://test.k6.io?id=${id}`);
+  const city = city_generate();
+  const dateTime = DateTime_generate();
 
-  // я гл
-  // 3. Запрашиваем защищённый ресурс с токеном
-  let res = http.get(
-    `http://localhost:8000/forecast/today?city=${city_generate()}&time=${DateTime_generate()}`,
-    {
-      headers: headers, // Передаем заголовки с токеном
+  try {
+    let res = http.get(
+      `http://127.0.0.1:8000/forecast/today?city=${city}&time=${dateTime}`,
+      { headers: headers }
+    );
 
-      // Передаем параметры запроса
+    let forecastSuccess = check(res, {
+      "forecast request successful": (r) => r.status === 200 && r.body,
+    });
+
+    if (!forecastSuccess) {
+      console.error(
+        `Forecast request failed: status ${res.status}, body: ${res.body}`
+      );
+    } else {
+      console.log(`Successful forecast: city ${city}, time ${dateTime}`);
     }
-  );
-
-  check(res, { "forecast request successful": (r) => r.status === 200 });
+  } catch (err) {
+    console.error(`Request error: ${err.message}`);
+  }
 
   sleep(0.3);
 }
 
+// Helper functions
 function city_generate() {
-  return Math.floor(Math.random() * 30 + 1); // Генерируем случайное число от 0 до 30
+  return Math.floor(Math.random() * 30 + 1);
 }
 
 function DateTime_generate() {
   const now = new Date();
   const year = now.getFullYear();
-  const month = String(now.getMonth() + 1).padStart(2, "0"); // Месяцы начинаются с 0, добавляем 1
+  const month = String(now.getMonth() + 1).padStart(2, "0");
   const day = String(now.getDate()).padStart(2, "0");
   const hours = String(now.getHours()).padStart(2, "0");
   const minutes = String(now.getMinutes()).padStart(2, "0");

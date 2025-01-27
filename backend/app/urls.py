@@ -8,12 +8,12 @@ from app.views.application.urls import application_patterns
 
 urlpatterns = [
     path(
-        "login/",
+        "login",
         auth.login,
         name="login",
     ),
     path(
-        "registration/",
+        "registration",
         auth.registration,
         name="registration",
     ),

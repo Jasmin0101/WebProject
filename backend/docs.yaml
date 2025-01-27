@@ -1,0 +1,145 @@
+openapi: 3.0.3
+info:
+  title: User Authentication API
+  version: 1.0.0
+  description: API для авторизации, регистрации и проверки пароля пользователя.
+paths:
+  /login:
+    post:
+      summary: Авторизация пользователя
+      description: Авторизует пользователя по логину и паролю.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - login
+                - password
+              properties:
+                login:
+                  type: string
+                  description: Логин пользователя.
+                password:
+                  type: string
+                  description: Пароль пользователя.
+      responses:
+        "200":
+          description: Успешная авторизация.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Login successful.
+                  access_token:
+                    type: string
+                    description: Токен доступа пользователя.
+        "400":
+          description: Ошибка запроса (например, отсутствуют обязательные поля или неверные данные).
+          content:
+            application/json:
+              schema:
+                type: string
+                example: Login and password are required.
+  /registration:
+    post:
+      summary: Регистрация пользователя
+      description: Создает нового пользователя с указанными данными.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - login
+                - email
+                - name
+                - surname
+                - city
+                - dob
+                - password
+              properties:
+                login:
+                  type: string
+                  description: Логин пользователя.
+                email:
+                  type: string
+                  format: email
+                  description: Email пользователя.
+                name:
+                  type: string
+                  description: Имя пользователя.
+                surname:
+                  type: string
+                  description: Фамилия пользователя.
+                city:
+                  type: integer
+                  description: Идентификатор города.
+                dob:
+                  type: string
+                  format: date
+                  description: Дата рождения пользователя.
+                password:
+                  type: string
+                  description: Пароль пользователя.
+      responses:
+        "200":
+          description: Успешная регистрация.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Registration successful.
+                  access_token:
+                    type: string
+                    description: Токен доступа пользователя.
+        "400":
+          description: Ошибка запроса (например, логин или email уже существуют, либо город не найден).
+          content:
+            application/json:
+              schema:
+                type: string
+                example: This login is already taken.
+  /check-password:
+    post:
+      summary: Проверка текущего пароля
+      description: Проверяет, совпадает ли указанный пароль с текущим паролем пользователя.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - password
+              properties:
+                password:
+                  type: string
+                  description: Пароль для проверки.
+      responses:
+        "200":
+          description: Успешная проверка.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  currentPassword:
+                    type: boolean
+                    description: Результат проверки пароля.
+                    example: true
+        "400":
+          description: Ошибка запроса.
+          content:
+            application/json:
+              schema:
+                type: string
+                example: Invalid request data.
