@@ -12,6 +12,8 @@ final class RoutesName {
 
   static const String adminApplication = 'adminApplication';
 
+  static const String adminProfile = 'adminProfile';
+
   static const String weather = 'weather';
 
   static const String quiz = 'quiz';

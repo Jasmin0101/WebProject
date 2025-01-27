@@ -15,6 +15,7 @@ import 'package:flutter_application_1/pages/weather.dart';
 import 'package:intl/intl.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import '../pages/admin_profile.dart';
 import 'fade_transition.dart';
 import 'routes_name.dart';
 
@@ -158,6 +159,16 @@ final GoRouter router = GoRouter(
             child: AdminApplicationPage(
               applicationId:
                   state.uri.queryParameters[QueriesName.applicationId],
+              status: state.uri.queryParameters[QueriesName.applicationsStatus],
+            ),
+          ),
+        ),
+        GoRoute(
+          path: RoutesName.adminProfile,
+          name: RoutesName.adminProfile,
+          pageBuilder: (context, state) => FadeTransitionPage(
+            key: state.pageKey,
+            child: AdmibProfilePage(
               status: state.uri.queryParameters[QueriesName.applicationsStatus],
             ),
           ),
