@@ -51,15 +51,24 @@ class HomePage extends StatelessWidget {
         child: ListView(
           padding: const EdgeInsets.all(24),
           children: [
-            const CurrentForecast(),
+            CurrentForecast(
+              cityId: cityId,
+              date: date ?? DateTime.now(),
+            ),
             const SizedBox(
               height: 32,
             ),
-            const WeekForecast(),
+            WeekForecast(
+              cityId: cityId,
+              date: date ?? DateTime.now(),
+            ),
             const SizedBox(
               height: 8,
             ),
-            const ChartForecast(),
+            ChartForecast(
+              cityId: cityId,
+              date: date ?? DateTime.now(),
+            ),
             const SizedBox(
               height: 32,
             ),

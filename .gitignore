@@ -231,3 +231,5 @@ app.*.symbols
 !.vscode/settings.json
 
 **/.gen/** 
+
+**/attachments/**

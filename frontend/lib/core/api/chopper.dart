@@ -2,7 +2,9 @@
 import 'dart:async';
 
 import 'package:chopper/chopper.dart';
+import 'package:flutter_application_1/core/api/services/admin.dart';
 import 'package:flutter_application_1/core/api/services/application.dart';
+import 'package:flutter_application_1/core/api/services/applications.dart';
 import 'package:flutter_application_1/core/api/services/forecast.dart';
 import 'package:flutter_application_1/core/api/services/user.dart';
 import 'package:flutter_application_1/core/token.dart';
@@ -40,8 +42,10 @@ final class Api extends ChopperClient {
           baseUrl: Uri.parse(baseUrl),
           services: [
             UserService.create(),
+            ApplicationsService.create(),
             ApplicationService.create(),
             ForecastService.create(),
+            AdminService.create(),
           ],
           converter: const JsonConverter(),
           interceptors: [TokenInterceptor()],

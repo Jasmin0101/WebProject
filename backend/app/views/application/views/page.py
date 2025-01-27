@@ -17,6 +17,7 @@ from app.models import (
     InfoApplicationAttachments,
     TextApplicationAttachments,
     User,
+    UserStatus,
 )
 
 ITEM_PER_PAGE = 10
@@ -29,6 +30,8 @@ def view_application_page(request: HttpRequest, user: User) -> HttpResponse:
     page = request.GET.get("page", 1)
     application_id = request.GET.get("application_id")
 
+    page = int(page)
+
     if page < 1:
         return HttpResponseBadRequest("PAGE_NUMBER_INVALID")
 
@@ -40,7 +43,7 @@ def view_application_page(request: HttpRequest, user: User) -> HttpResponse:
     if application == None:
         return HttpResponseBadRequest("APPLICATION_NOT_FOUND")
 
-    if application.author != user:
+    if user.status != UserStatus.ADMIN and application.author != user:
         return HttpResponseNotAllowed("ACCESS_DENIED")
 
     text_attachments = TextApplicationAttachments.objects.filter(
@@ -59,7 +62,9 @@ def view_application_page(request: HttpRequest, user: User) -> HttpResponse:
 
     all_attachemnts = sorted(order, key=lambda x: x.number_in_order)
 
-    page_attachnemts = order[(page - 1) * ITEM_PER_PAGE : page * ITEM_PER_PAGE]
+    page_attachnemts = all_attachemnts[::-1][
+        (page - 1) * ITEM_PER_PAGE : page * ITEM_PER_PAGE
+    ]
 
     return JsonResponse(
         {

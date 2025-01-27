@@ -33,7 +33,6 @@ def my_view(request: HttpRequest, user: User) -> HttpResponse:
 def today(request: HttpRequest, user: User) -> HttpResponse:
 
     try:
-        # Получаем параметры из GET-запроса
         city_id = request.GET.get("city", user.city.id)
         time = request.GET.get("time")[10:]
         date = request.GET.get("time")[:11]
@@ -54,7 +53,7 @@ def today(request: HttpRequest, user: User) -> HttpResponse:
         )
 
     except Exception as e:
-        print(e)
+
         return JsonResponse({"error": str(e)}, status=500)
 
 
@@ -94,7 +93,6 @@ def week(request: HttpRequest, user: User) -> HttpResponse:
             if forecast_dict.get(i.date) == None:
                 forecast_dict[i.date] = i
 
-        print(forecast_dict)
         forecast_list = []
 
         def which_weekday(start, day):
@@ -128,17 +126,6 @@ def week(request: HttpRequest, user: User) -> HttpResponse:
                 }
             )
 
-        # Формируем ответ
-        # forecast_list = [
-        #     {
-        #         "date": forecast.date.strftime("%Y-%m-%d"),
-        #         "max_temp": forecast.max_temp,
-        #         "min_temp": forecast.max_temp,
-        #         # "conditions": forecast.conditions,
-        #     }
-        #     for forecast in forecasts
-        # ]
-
         return JsonResponse({"forecasts": forecast_list}, status=200)
 
     except json.JSONDecodeError:
@@ -157,7 +144,7 @@ def today24(request: HttpRequest, user: User) -> HttpResponse:
         city = request.GET.get("city", user.city.id)
         time = request.GET.get("time")[10:]
         date = request.GET.get("time")[:10]
-        print(city, time, date)
+
         # Проверяем, что обязательные параметры переданы
         if not city or not date:
             return HttpResponseBadRequest("Missing 'city' or 'date' parameter")
@@ -165,7 +152,6 @@ def today24(request: HttpRequest, user: User) -> HttpResponse:
         # Получаем прогнозы за указанный день
         forecasts = Forecast.objects.filter(city=city, date=date).order_by("time")
 
-        print(forecasts)
         # Проверяем, есть ли данные
         if not forecasts.exists():
             return JsonResponse(

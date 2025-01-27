@@ -9,7 +9,7 @@ def require_login(view_func):
     def _wrapped_view(request, *args, **kwargs):
 
         token = request.headers.get("Auth")
-
+        
         if token is None:
             return JsonResponse({"error": "Unauthorized"}, status=401)
 

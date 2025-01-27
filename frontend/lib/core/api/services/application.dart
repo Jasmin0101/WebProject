@@ -1,33 +1,38 @@
 import 'package:chopper/chopper.dart';
+import 'package:http/http.dart' show MultipartFile;
 
 part '../../../.gen/core/api/services/application.chopper.dart';
 
 @ChopperApi()
 abstract class ApplicationService extends ChopperService {
-  @Post(path: '/application/create/')
-  Future<Response> applicationCreate(
-    @Field('title') String title,
+  @Post(path: '/application/close')
+  Future<Response> close(
+    @Field('application_id') int applicationId,
+  );
+
+  @Post(path: '/application/add/text')
+  Future<Response> addText(
+    @Field('application_id') int applicationId,
     @Field('text') String text,
   );
 
-  @Get(path: '/application/view/')
-  Future<Response> applicationView({
-// @Query используется для передачи параметров в строку запроса (query string) URL.
-// Например, если вы вызовете applicationView(status: "send"), запрос будет отправлен как
-// Копировать код
-// GET /application/view?status=send
-    @Query('status') String? status, // Параметр для фильтрации по статусу
-  });
-
-  @Post(path: '/application/my/edit/')
-  Future<Response> myApplicationEdit(
-    @Field('title') String title,
-    @Field('text') String text,
-    @Field('id') int id,
+  @Get(path: '/application/view/page')
+  Future<Response> viewPage(
+    @Query('application_id') int applicationId,
+    @Query('page') int page,
   );
 
-  @Get(path: '/application/view/my/')
-  Future<Response> myApplicationView();
+  @Get(path: '/application/view')
+  Future<Response> view(
+    @Query('application_id') int applicationId,
+  );
+
+  @Post(path: '/application/{id}/add/file')
+  @multipart
+  Future<Response> uploadFile(
+    @Path('id') int applicationId,
+    @PartFile('file') MultipartFile file,
+  );
 
   static ApplicationService create([ChopperClient? client]) =>
       _$ApplicationService(client);

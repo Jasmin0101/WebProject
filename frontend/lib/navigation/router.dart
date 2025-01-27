@@ -2,8 +2,11 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter_application_1/core/city.dart';
 import 'package:flutter_application_1/core/token.dart';
 import 'package:flutter_application_1/navigation/queries_name.dart';
-import 'package:flutter_application_1/pages/user.dart';
+import 'package:flutter_application_1/pages/admin.dart';
+import 'package:flutter_application_1/pages/admin_application.dart';
 import 'package:flutter_application_1/pages/application.dart';
+import 'package:flutter_application_1/pages/user.dart';
+import 'package:flutter_application_1/pages/applications.dart';
 import 'package:flutter_application_1/pages/home.dart';
 import 'package:flutter_application_1/pages/login.dart';
 import 'package:flutter_application_1/pages/quiz.dart';
@@ -111,19 +114,54 @@ final GoRouter router = GoRouter(
           name: RoutesName.user,
           routes: [
             GoRoute(
+              path: RoutesName.applications,
+              name: RoutesName.applications,
+              pageBuilder: (context, state) => FadeTransitionPage(
+                key: state.pageKey, // Добавлен ключ
+                child: const ApplicationsPage(),
+              ),
+            ),
+            GoRoute(
               path: RoutesName.application,
               name: RoutesName.application,
               pageBuilder: (context, state) => FadeTransitionPage(
                 key: state.pageKey, // Добавлен ключ
-                child: const ApplicationPage(),
+                child: ApplicationPage(
+                  applicationId:
+                      state.uri.queryParameters[QueriesName.applicationId],
+                ),
               ),
-            ),
+            )
           ],
           pageBuilder: (context, state) => FadeTransitionPage(
             key: state.pageKey, // Добавлен ключ
             child: const UserPage(),
           ),
         )
+      ],
+    ),
+    GoRoute(
+      path: RoutesName.admin,
+      name: RoutesName.admin,
+      pageBuilder: (context, state) => FadeTransitionPage(
+        key: state.pageKey,
+        child: AdminPage(
+          status: state.uri.queryParameters[QueriesName.applicationsStatus],
+        ),
+      ),
+      routes: [
+        GoRoute(
+          path: RoutesName.adminApplication,
+          name: RoutesName.adminApplication,
+          pageBuilder: (context, state) => FadeTransitionPage(
+            key: state.pageKey,
+            child: AdminApplicationPage(
+              applicationId:
+                  state.uri.queryParameters[QueriesName.applicationId],
+              status: state.uri.queryParameters[QueriesName.applicationsStatus],
+            ),
+          ),
+        ),
       ],
     ),
   ],

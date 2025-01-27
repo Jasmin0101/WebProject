@@ -8,11 +8,17 @@ final class RoutesName {
 
   static const String home = '/home';
 
+  static const String admin = '/admin';
+
+  static const String adminApplication = 'adminApplication';
+
   static const String weather = 'weather';
 
   static const String quiz = 'quiz';
 
   static const String user = 'user';
+
+  static const String applications = 'applications';
 
   static const String application = 'application';
 }

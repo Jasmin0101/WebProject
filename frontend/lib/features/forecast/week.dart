@@ -4,10 +4,12 @@ import 'package:flutter_application_1/core/api/services/forecast.dart';
 
 class WeekForecast extends StatefulWidget {
   final int? cityId;
+  final DateTime date;
 
   const WeekForecast({
     super.key,
     this.cityId,
+    required this.date,
   });
 
   @override
@@ -22,7 +24,7 @@ class _WeekForecastState extends State<WeekForecast> {
   Future<void> _fetchForecastWeek() async {
     try {
       final response = await api.getService<ForecastService>().forecastWeek(
-            "2023-01-01 14:34",
+            widget.date.toIso8601String(),
             city: widget.cityId?.toString(),
           );
       if (response.isSuccessful) {

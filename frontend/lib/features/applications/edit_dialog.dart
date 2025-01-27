@@ -1,26 +1,40 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_application_1/core/api/chopper.dart';
-import 'package:flutter_application_1/core/api/services/application.dart';
+import 'package:flutter_application_1/core/api/services/applications.dart';
 
-class ApplicationAddDialog extends StatefulWidget {
-  const ApplicationAddDialog({super.key});
+class ApplicationEditDialog extends StatefulWidget {
+  final Map<dynamic, dynamic> application;
+  const ApplicationEditDialog({super.key, required this.application});
 
-  static Future<bool?> showApplicationDialog(BuildContext context) async {
+  static Future<bool?> showApplicationDialog(
+    BuildContext context,
+    Map<dynamic, dynamic> application,
+  ) async {
     return showModalBottomSheet<bool>(
       context: context,
       isScrollControlled: true, // Для адаптации под клавиатуру
       isDismissible: false,
-      builder: (_) => const ApplicationAddDialog(),
+      builder: (_) => ApplicationEditDialog(
+        application: application,
+      ),
     );
   }
 
   @override
-  State<ApplicationAddDialog> createState() => _ApplicationAddDialogState();
+  State<ApplicationEditDialog> createState() => _ApplicationEditDialogState();
 }
 
-class _ApplicationAddDialogState extends State<ApplicationAddDialog> {
-  final _titleController = TextEditingController();
-  final _textController = TextEditingController();
+class _ApplicationEditDialogState extends State<ApplicationEditDialog> {
+  late final TextEditingController _titleController;
+  late final TextEditingController _textController;
+
+  @override
+  void initState() {
+    _titleController = TextEditingController(text: widget.application['title']);
+    _textController = TextEditingController(text: widget.application['text']);
+
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -35,7 +49,7 @@ class _ApplicationAddDialogState extends State<ApplicationAddDialog> {
         mainAxisSize: MainAxisSize.min,
         children: [
           const Text(
-            'Создание заявки',
+            'Редактирование заявки',
             style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
           ),
           const SizedBox(height: 10),
@@ -76,10 +90,13 @@ class _ApplicationAddDialogState extends State<ApplicationAddDialog> {
                     try {
                       final title = _titleController.text;
                       final text = _textController.text;
+                      final id = widget.application['id'];
+
                       final response = await api
-                          .getService<ApplicationService>()
-                          .applicationCreate(title, text);
+                          .getService<ApplicationsService>()
+                          .myApplicationEdit(title, text, id);
                     } catch (e) {}
+
                     if (context.mounted) Navigator.of(context).pop(true);
                   },
                   child: const Text('Отправить'),

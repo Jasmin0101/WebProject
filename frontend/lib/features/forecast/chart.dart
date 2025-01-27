@@ -9,10 +9,12 @@ import 'package:http/http.dart' as http;
 
 class ChartForecast extends StatefulWidget {
   final int? cityId;
+  final DateTime date;
 
   const ChartForecast({
     super.key,
     this.cityId,
+    required this.date,
   });
 
   @override
@@ -31,7 +33,7 @@ class _ChartForecastState extends State<ChartForecast> {
     try {
       // Вот тут надо поменять на настоящий запрос
       final response = await api.getService<ForecastService>().forecastToday24(
-            '2023-01-01 14:00',
+            widget.date.toIso8601String(),
             city: widget.cityId?.toString(),
           );
 

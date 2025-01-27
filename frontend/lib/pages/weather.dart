@@ -27,7 +27,7 @@ class WeatherPage extends StatelessWidget {
               IconButton(
                 icon: const Icon(Icons.mail),
                 onPressed: () {
-                  AppNavigator.openApplication();
+                  AppNavigator.openApplications();
                 },
               ),
               IconButton(

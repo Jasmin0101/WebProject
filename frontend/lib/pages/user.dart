@@ -15,9 +15,9 @@ class UserPage extends StatelessWidget {
         ),
         actions: [
           IconButton(
-            icon: const Icon(Icons.mail),
+            icon: const Icon(Icons.support_agent),
             onPressed: () {
-              AppNavigator.openApplication();
+              AppNavigator.openApplications();
             },
           ),
         ],

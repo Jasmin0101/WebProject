@@ -4,9 +4,10 @@ import 'package:flutter_localizations/flutter_localizations.dart';
 
 import 'navigation/router.dart';
 
-const double maxAppWidth = 480;
+const double maxAppWidth = 800;
 
 Future<void> main() async {
+  WidgetsFlutterBinding.ensureInitialized();
   await tokenService.init();
   runApp(const App());
 }
@@ -42,6 +43,7 @@ class App extends StatelessWidget {
       ),
       themeMode: ThemeMode.system,
       builder: (context, child) => Material(
+        color: Theme.of(context).colorScheme.surfaceContainer,
         child: Stack(
           alignment: Alignment.center,
           children: [

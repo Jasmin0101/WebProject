@@ -18,27 +18,27 @@ urlpatterns = [
         name="registration",
     ),
     path(
-        "checkPassword/",
+        "checkPassword",
         auth.checkPassword,
         name="currentPassword",
     ),
     path(
-        "user/me/view/",
+        "user/me/view",
         user.me_view,
         name="user_me_view",
     ),
     path(
-        "user/me/edit/",
+        "user/me/edit",
         user.me_edit,
         name="user_me_view",
     ),
     path(
-        "status/",
+        "status",
         user.status,
         name="status",
     ),
     path(
-        "cities/view/",
+        "cities/view",
         city.cites_view,
         name="cities_view",
     ),
@@ -53,17 +53,17 @@ urlpatterns = [
         name="week",
     ),
     path(
-        "forecast/today24/",
+        "forecast/today24",
         forecast.today24,
         name="today24",
     ),
     path(
-        "parser/start/",
+        "parser/start",
         parser.parser_start,
         name="parser_start",
     ),
     path(
-        "randomizer/start/",
+        "randomizer/start",
         parser.randomizer_start,
         name="randomizer_start",
     ),

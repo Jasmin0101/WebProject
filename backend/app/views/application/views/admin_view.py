@@ -19,7 +19,6 @@ from app.models import (
     InfoApplicationAttachments,
     TextApplicationAttachments,
     User,
-    UserStatus,
 )
 
 ITEMS_PER_PAGE = 10
@@ -27,28 +26,25 @@ ITEMS_PER_PAGE = 10
 
 @require_login
 @require_http_methods(["GET"])
-def view_application_my(request: HttpRequest, user: User) -> HttpResponse:
+def view_application_admin(request: HttpRequest, user: User) -> HttpResponse:
 
-    active = request.GET.get("active")
+    status = request.GET.get("status")
     page = request.GET.get("page")
-    all_applications = Application.objects.filter(author=user).order_by("date_created")
 
-    active = active == "true"
+    all_applications = Application.objects.all().order_by("date_created")
     page = int(page)
+
     if not page:
         return HttpResponseBadRequest("Page parameter is required")
 
     if page < 1:
         return HttpResponseBadRequest("Page parameter must be greater than 0")
 
-    if active:
-        # Filter to show only non-completed applications
-        all_applications = all_applications.exclude(status=ApplicationStatus.COMPLETED)
-    else:
-        # Show all applications
-        all_applications = all_applications.filter(status=ApplicationStatus.COMPLETED)
+    if status:
+        all_applications = all_applications.filter(status=status)
 
     paginator = Paginator(all_applications, ITEMS_PER_PAGE)
+
     try:
         current_page = paginator.page(page)
     except PageNotAnInteger:
@@ -69,33 +65,5 @@ def view_application_my(request: HttpRequest, user: User) -> HttpResponse:
                 for application in current_page
             ],
             "is_last_page": not current_page.has_next(),
-        },
-    )
-
-
-@require_login
-@require_http_methods(["GET"])
-def view_application(request: HttpRequest, user: User) -> HttpResponse:
-
-    application_id = request.GET.get("application_id")
-
-    if not application_id:
-        return HttpResponseBadRequest("APPLICATION_ID_REQUIRED")
-
-    application = Application.objects.get(id=application_id)
-
-    if application == None:
-        return HttpResponseBadRequest("APPLICATION_NOT_FOUND")
-
-    if user.status != UserStatus.ADMIN and application.author != user:
-        return HttpResponseNotAllowed("ACCESS_DENIED")
-
-    return JsonResponse(
-        {
-            "id": application.id,
-            "date_created": application.date_created,
-            "status": application.status,
-            "title": application.title,
-            "author": application.author.id,
         },
     )

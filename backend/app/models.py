@@ -8,6 +8,11 @@ class City(models.Model):
     id = models.BigAutoField(primary_key=True)
 
 
+class UserStatus(models.TextChoices):
+    ADMIN = "AD", "Администратор"
+    USER = "US", "Пользователь"
+
+
 class User(models.Model):
     # Поле id является первичным ключом, и в Django оно создаётся автоматически.
     id = models.BigAutoField(primary_key=True)
@@ -17,6 +22,12 @@ class User(models.Model):
 
     # date of birth
     dob = models.DateField(null=True)
+
+    status = models.CharField(
+        max_length=2,
+        choices=UserStatus.choices,
+        default=UserStatus.USER,
+    )
 
     # Поле для имени пользователя с ограничением длины
     login = models.CharField(max_length=180, null=True)
@@ -114,7 +125,9 @@ class FileApplicationAttachments(models.Model):
         on_delete=models.CASCADE,
         related_name="file_attachments",
     )
-    file = models.FileField()
+    file = models.FileField(
+        upload_to="attachments/%Y/%m/%d",
+    )
 
     def toDTO(self):
         return {

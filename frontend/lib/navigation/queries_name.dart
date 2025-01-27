@@ -4,4 +4,8 @@ final class QueriesName {
 
   static const String date = 'date';
   static const String questionary = 'questionary';
+
+  static const String applicationId = 'applicationId';
+
+  static const String applicationsStatus = 'applicationsStatus';
 }

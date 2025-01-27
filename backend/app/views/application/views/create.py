@@ -2,6 +2,7 @@ import json
 from datetime import datetime
 
 from django.http import HttpRequest, HttpResponse, HttpResponseBadRequest, JsonResponse
+from django.views.decorators.csrf import csrf_exempt
 from django.views.decorators.http import require_http_methods
 
 from app.decorator import require_login
@@ -10,6 +11,7 @@ from app.models import Application, InfoApplicationAttachments, User
 
 @require_login
 @require_http_methods(["POST"])
+@csrf_exempt
 def create_application(request: HttpRequest, user: User) -> HttpResponse:
 
     data = json.loads(request.body)
@@ -27,7 +29,7 @@ def create_application(request: HttpRequest, user: User) -> HttpResponse:
 
     new_info_attachment = InfoApplicationAttachments(
         application=application,
-        info=f"APPLICATION_CREATED ${datetime.now()}",
+        info=f"Заявка создана {datetime.now().strftime('%Y.%m.%d %H:%M')}",
         number_in_order=1,
     )
 

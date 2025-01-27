@@ -8,8 +8,13 @@ import 'package:flutter_application_1/core/api/services/user.dart';
 ///
 class CurrentForecast extends StatefulWidget {
   final int? cityId;
+  final DateTime date;
 
-  const CurrentForecast({super.key, this.cityId});
+  const CurrentForecast({
+    super.key,
+    this.cityId,
+    required this.date,
+  });
   @override
   State<CurrentForecast> createState() => _CurrentForecastState();
 }
@@ -44,7 +49,7 @@ class _CurrentForecastState extends State<CurrentForecast> {
   Future<void> _fetchForecastToday() async {
     try {
       final response = await api.getService<ForecastService>().forecastToday(
-            "2023-01-01 14:00",
+            widget.date.toIso8601String(),
             city: widget.cityId?.toString(),
           );
       if (response.isSuccessful) {

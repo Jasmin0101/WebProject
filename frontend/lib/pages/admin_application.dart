@@ -1,15 +1,18 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_application_1/features/admin/application/actions.dart';
 import 'package:flutter_application_1/features/application/actions.dart';
 import 'package:flutter_application_1/features/application/input.dart';
 import 'package:flutter_application_1/features/application/messages.dart';
 import 'package:flutter_application_1/navigation/navigator.dart';
 
-class ApplicationPage extends StatelessWidget {
+class AdminApplicationPage extends StatelessWidget {
   final String? applicationId;
+  final String? status;
 
-  const ApplicationPage({
+  const AdminApplicationPage({
     super.key,
     required this.applicationId,
+    required this.status,
   });
 
   @override
@@ -17,13 +20,13 @@ class ApplicationPage extends StatelessWidget {
     return PopScope(
       canPop: false,
       onPopInvokedWithResult: (didPop, result) {
-        AppNavigator.openApplications();
+        AppNavigator.openAdmin(status);
       },
       child: Scaffold(
         appBar: AppBar(
           title: Text('Заяка номер $applicationId'),
           actions: [
-            ApplicationAction(
+            AdminApplicationAction(
               applicationId: applicationId ?? "",
             ),
           ],

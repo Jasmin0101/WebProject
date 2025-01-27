@@ -1,18 +1,20 @@
 import random
 from datetime import datetime, timedelta
+
 from django.utils.dateparse import parse_date, parse_time
-from app.models import Forecast, City
+
+from app.models import City, Forecast
 
 
 def generate_random_weather_sql(
-    city_id, city_name, output_file, start_year=2023, end_year=2023
+    city_id, city_name, output_file, start_year=2025, end_year=2025
 ):
     """
     Генерирует SQL-запросы для случайных данных о погоде за период с 2023 по 2024 годы
     с разбивкой по 14 дней.
     """
     start_date = datetime(start_year, 1, 1)
-    end_date = datetime(end_year, 3, 31)
+    end_date = datetime(end_year, 2, 1)
     delta = timedelta(days=365 / 2)
 
     current_date = start_date
@@ -46,8 +48,8 @@ def generate_random_weather_sql(
                 # Формируем SQL-запрос
                 sql_query = (
                     f"INSERT INTO app_forecast "
-                    f"(city_id, date, time, max_temp, min_temp, temperature, conditions, pressure, humidity, wind_speed) "
-                    f"VALUES ({city_id}, '{single_date.date()}', '{time}', {max_temp:.2f}, {min_temp:.2f}, "
+                    f"(city_id, date, time, temperature, conditions, pressure, humidity, wind_speed) "
+                    f"VALUES ({city_id}, '{single_date.date()}', '{time}', "
                     f"{temperature:.2f}, '{conditions}', {pressure:.2f}, {humidity:.2f}, {wind_speed:.2f});\n"
                 )
                 output_file.write(sql_query)

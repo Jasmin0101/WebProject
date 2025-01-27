@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_application_1/core/api/chopper.dart';
 import 'package:flutter_application_1/core/api/services/user.dart';
 import 'package:flutter_application_1/core/token.dart';
@@ -33,6 +34,9 @@ class _LoginFormState extends State<LoginForm> {
                 padding: const EdgeInsets.symmetric(vertical: 8.0),
                 child: TextFormField(
                   controller: _loginController,
+                  inputFormatters: [
+                    FilteringTextInputFormatter.deny(RegExp(r'\s')),
+                  ],
                   decoration: const InputDecoration(
                     hintText: "Логин",
                     border: OutlineInputBorder(),
@@ -51,6 +55,9 @@ class _LoginFormState extends State<LoginForm> {
                 child: TextFormField(
                   controller: _passwordController,
                   obscureText: true,
+                  inputFormatters: [
+                    FilteringTextInputFormatter.deny(RegExp(r'\s')),
+                  ],
                   decoration: const InputDecoration(
                     hintText: 'Пароль',
                     border: OutlineInputBorder(),
@@ -96,8 +103,15 @@ class _LoginFormState extends State<LoginForm> {
                         final token = response.body['access_token'];
                         tokenService.saveToken(token);
 
-                        AppNavigator.openHome();
-                      // ignore: empty_catches
+                        final status = response.body['status'];
+
+                        if (status == "US") {
+                          AppNavigator.openHome();
+                        }
+
+                        if (status == "AD") {
+                          AppNavigator.openAdmin();
+                        }
                       } catch (e) {}
                     },
                     child: const Text('Войти'),

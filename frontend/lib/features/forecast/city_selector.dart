@@ -50,7 +50,7 @@ class _CitySelectorState extends State<CitySelector> {
           minHeight: 72,
         ),
         child: DropdownMenu<int>(
-          expandedInsets: const EdgeInsets.only(top: 8, bottom: 8 * 2 + 72),
+          expandedInsets: const EdgeInsets.only(top: 8, bottom: 8 * 2 + 120),
           menuHeight: 150 * 2,
           width: 360 - 16 * 2,
           requestFocusOnTap: true,
