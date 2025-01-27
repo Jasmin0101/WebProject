@@ -43,6 +43,7 @@ def today(request: HttpRequest, user: User) -> HttpResponse:
 
         if not forecast:
             return JsonResponse({"error": "Forecast not found"}, status=404)
+
         print(forecast.city.city, forecast.temperature, forecast.conditions)
         return JsonResponse(
             {
@@ -96,22 +97,24 @@ def week(request: HttpRequest, user: User) -> HttpResponse:
         forecast_list = []
 
         def which_weekday(start, day):
-
-            if start == day:
+            if start.weekday() == day.weekday():
                 return "Сегодня"
-
-            # Check if date is tomorrow
-            tomorrow = day + timedelta(days=1)
-            if tomorrow == start:
+            if (start.weekday() + 1) % 7 == day.weekday():
                 return "Завтра"
-
-            # Check if date is yesterday
-            yesterday = start - timedelta(days=1)
-            if yesterday == day:
-                return "Вчера"
-
-            # Return formatted date for other cases
-            return day.strftime("%d.%m")
+            if day.weekday() == 0:
+                return "Пн"
+            if day.weekday() == 1:
+                return "Вт"
+            if day.weekday() == 2:
+                return "Ср"
+            if day.weekday() == 3:
+                return "Чт"
+            if day.weekday() == 4:
+                return "Пт"
+            if day.weekday() == 5:
+                return "Сб"
+            if day.weekday() == 6:
+                return "Вс"
 
         for key in forecast_dict.keys():
             forecast_list.append(

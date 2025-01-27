@@ -96,6 +96,9 @@ class _UserEditState extends State<UserEdit> {
                   minHeight: 88,
                 ),
                 child: TextFormField(
+                  inputFormatters: [
+                    FilteringTextInputFormatter.deny(RegExp(r'\s')),
+                  ],
                   controller: _nameController,
                   decoration: const InputDecoration(
                     hintText: "Введите имя",
@@ -116,6 +119,9 @@ class _UserEditState extends State<UserEdit> {
                   minHeight: 88,
                 ),
                 child: TextFormField(
+                  inputFormatters: [
+                    FilteringTextInputFormatter.deny(RegExp(r'\s')),
+                  ],
                   controller: _surnameController,
                   decoration: const InputDecoration(
                     hintText: "Введите фамилию",
@@ -137,6 +143,9 @@ class _UserEditState extends State<UserEdit> {
                   minHeight: 88,
                 ),
                 child: TextFormField(
+                  inputFormatters: [
+                    FilteringTextInputFormatter.deny(RegExp(r'\s')),
+                  ],
                   controller: _emailController,
                   decoration: const InputDecoration(
                     hintText: "Введите адрес электронной почты",
@@ -190,6 +199,9 @@ class _UserEditState extends State<UserEdit> {
                 ),
                 child: TextFormField(
                   controller: _loginController,
+                  inputFormatters: [
+                    FilteringTextInputFormatter.deny(RegExp(r'\s')),
+                  ],
                   decoration: const InputDecoration(
                     hintText: "Введите логин",
                     border: OutlineInputBorder(),
@@ -214,6 +226,9 @@ class _UserEditState extends State<UserEdit> {
                 ),
                 child: TextFormField(
                   controller: _passwordController,
+                  inputFormatters: [
+                    FilteringTextInputFormatter.deny(RegExp(r'\s')),
+                  ],
                   // obscureText: _showPassWorld,
                   decoration: const InputDecoration(
                     hintText: "Введите пароль",
