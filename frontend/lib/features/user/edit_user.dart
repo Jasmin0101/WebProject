@@ -93,7 +93,7 @@ class _UserEditState extends State<UserEdit> {
             children: [
               ConstrainedBox(
                 constraints: const BoxConstraints(
-                  minHeight: 72,
+                  minHeight: 88,
                 ),
                 child: TextFormField(
                   controller: _nameController,
@@ -113,7 +113,7 @@ class _UserEditState extends State<UserEdit> {
               // Фамилия
               ConstrainedBox(
                 constraints: const BoxConstraints(
-                  minHeight: 72,
+                  minHeight: 88,
                 ),
                 child: TextFormField(
                   controller: _surnameController,
@@ -134,7 +134,7 @@ class _UserEditState extends State<UserEdit> {
               // Email
               ConstrainedBox(
                 constraints: const BoxConstraints(
-                  minHeight: 72,
+                  minHeight: 88,
                 ),
                 child: TextFormField(
                   controller: _emailController,
@@ -160,7 +160,7 @@ class _UserEditState extends State<UserEdit> {
 
               ConstrainedBox(
                 constraints: const BoxConstraints(
-                  minHeight: 72,
+                  minHeight: 88,
                 ),
                 child: DropdownMenu<int>(
                   expandedInsets: const EdgeInsets.only(top: 8, bottom: 8),
@@ -186,7 +186,7 @@ class _UserEditState extends State<UserEdit> {
               // Логин
               ConstrainedBox(
                 constraints: const BoxConstraints(
-                  minHeight: 72,
+                  minHeight: 88,
                 ),
                 child: TextFormField(
                   controller: _loginController,
@@ -210,7 +210,7 @@ class _UserEditState extends State<UserEdit> {
               // Пароль
               ConstrainedBox(
                 constraints: const BoxConstraints(
-                  minHeight: 72,
+                  minHeight: 88,
                 ),
                 child: TextFormField(
                   controller: _passwordController,
@@ -227,6 +227,26 @@ class _UserEditState extends State<UserEdit> {
                     if (value.length < 6) {
                       return 'Пароль должен быть не менее 6 символов';
                     }
+
+                    // Check for uppercase letters
+                    if (!RegExp(r'[A-Z]').hasMatch(value)) {
+                      return 'Пароль должен содержать заглавную букву';
+                    }
+
+                    // Check for lowercase letters
+                    if (!RegExp(r'[a-z]').hasMatch(value)) {
+                      return 'Пароль должен содержать строчную букву';
+                    }
+
+                    // Check for numbers
+                    if (!RegExp(r'[0-9]').hasMatch(value)) {
+                      return 'Пароль должен содержать цифру';
+                    }
+
+                    // Check for special characters
+                    if (!RegExp(r'[!@#$%^&*(),.?":{}|<>]').hasMatch(value)) {
+                      return 'Пароль должен содержать специальный символ';
+                    }
                     return null;
                   },
                 ),
@@ -235,7 +255,7 @@ class _UserEditState extends State<UserEdit> {
               // Дата рождения
               ConstrainedBox(
                 constraints: const BoxConstraints(
-                  minHeight: 72,
+                  minHeight: 88,
                 ),
                 child: TextFormField(
                   controller: _dateController,

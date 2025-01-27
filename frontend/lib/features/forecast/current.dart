@@ -94,6 +94,11 @@ class _CurrentForecastState extends State<CurrentForecast> {
 
   String _getWeatherDescription(String type) => switch (type) {
         "Snow" => "Снег",
+        "Rain" => "Дождь",
+        "Storm" => "Гроза",
+        "Windy" => "Ветрено",
+        "Cloudy" => "Облачно",
+        "Clear" => "Ясно",
         _ => "Не определено",
       };
 

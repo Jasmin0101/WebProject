@@ -24,7 +24,7 @@ def generate_random_weather_sql(
     Генерирует SQL-запросы для случайных данных о погоде за период с 2023 по 2024 годы
     с разбивкой по 14 дней.
     """
-    start_date = datetime(start_year, 1, 1)
+    start_date = datetime(start_year, 1, 20)
     end_date = datetime(end_year, 2, 1)
     delta = timedelta(days=365 / 2)
 

@@ -19,6 +19,7 @@ from app.models import (
     InfoApplicationAttachments,
     TextApplicationAttachments,
     User,
+    UserStatus,
 )
 
 ITEMS_PER_PAGE = 10
@@ -33,6 +34,9 @@ def view_application_admin(request: HttpRequest, user: User) -> HttpResponse:
 
     all_applications = Application.objects.all().order_by("date_created")
     page = int(page)
+
+    if user.status != UserStatus.ADMIN:
+        return HttpResponseNotAllowed()
 
     if not page:
         return HttpResponseBadRequest("Page parameter is required")
