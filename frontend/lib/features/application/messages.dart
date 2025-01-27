@@ -31,6 +31,8 @@ class _AplicationMessagesListState extends State<AplicationMessagesList> {
 
   bool _isLoading = true;
   int? _applicationAuthorId;
+  int? _lastKnownTotalItems;
+  Timer? _updateTimer;
   StreamSubscription<Map>? _messagesSubscription;
 
   @override
@@ -42,8 +44,16 @@ class _AplicationMessagesListState extends State<AplicationMessagesList> {
     _fetchApplicationInfo();
     _messagesSubscription = messagesStreamController.stream.listen((event) {
       // _pagingController.itemList?.add(event);
+      if (_lastKnownTotalItems != null) {
+        _lastKnownTotalItems = _lastKnownTotalItems! + 1;
+      }
       _pagingController.refresh();
     });
+
+    _updateTimer = Timer.periodic(
+      const Duration(seconds: 5),
+      (_) => _checkForUpdates(),
+    );
   }
 
   Future<void> _fetchPage(int pageKey) async {
@@ -79,11 +89,33 @@ class _AplicationMessagesListState extends State<AplicationMessagesList> {
       final data = Map<String, dynamic>.from(response.body);
 
       _applicationAuthorId = data["author"];
+      _lastKnownTotalItems = data["total_attachments"];
       _isLoading = false;
       setState(() {});
     } catch (error) {
       _pagingController.error = error;
     }
+  }
+
+  Future<void> _checkForUpdates() async {
+    final service = api.getService<ApplicationService>();
+
+    try {
+      final response = await service.view(
+        int.tryParse(widget.applicationId) ?? -1,
+      );
+
+      final data = Map<String, dynamic>.from(response.body);
+
+      final currentTotalAttachemnts = data["total_attachments"];
+
+      if (currentTotalAttachemnts != _lastKnownTotalItems) {
+        _lastKnownTotalItems = currentTotalAttachemnts;
+        _pagingController.refresh();
+      }
+
+      setState(() {});
+    } catch (error) {}
   }
 
   @override
@@ -173,6 +205,7 @@ class _AplicationMessagesListState extends State<AplicationMessagesList> {
   void dispose() {
     _pagingController.dispose();
     _messagesSubscription?.cancel();
+    _updateTimer?.cancel();
     super.dispose();
   }
 }

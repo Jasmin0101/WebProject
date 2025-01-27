@@ -119,12 +119,12 @@ class _AdminApplicationActionState extends State<AdminApplicationAction> {
         }
       },
       itemBuilder: (context) => [
-        PopupMenuItem<int>(
+        const PopupMenuItem<int>(
           value: 0,
           child: Text("Требуется информация"),
         ),
-        PopupMenuItem<int>(
-          value: 0,
+        const PopupMenuItem<int>(
+          value: 1,
           child: Text("Закрыть заявку"),
         ),
       ],

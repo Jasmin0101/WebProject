@@ -8,6 +8,7 @@ from django.http import (
     HttpResponseNotAllowed,
     JsonResponse,
 )
+from django.utils import timezone
 from django.views.decorators.csrf import csrf_exempt
 from django.views.decorators.http import require_http_methods
 
@@ -47,6 +48,9 @@ def add_text_attachment(request: HttpRequest, user: User) -> HttpResponse:
     if user.status != UserStatus.ADMIN and application.author != user:
         return HttpResponseNotAllowed("ACCESS_DENIED")
 
+    if application.status == ApplicationStatus.COMPLETED:
+        return HttpResponseBadRequest("APPLICATION_ALREADY_COMPLETED")
+
     if (
         user.status == UserStatus.ADMIN
         and application.status == ApplicationStatus.WAITING
@@ -55,6 +59,22 @@ def add_text_attachment(request: HttpRequest, user: User) -> HttpResponse:
         new_info_attachment = InfoApplicationAttachments(
             application=application,
             info=f"Заявка принята администратором {user.name}",
+            number_in_order=application.total_attachments + 1,
+        )
+
+        application.status = ApplicationStatus.WORKING
+        application.total_attachments += 1
+
+        new_info_attachment.save()
+
+    if (
+        user == application.author
+        and application.status == ApplicationStatus.INFORMATION_REQUIRED
+    ):
+
+        new_info_attachment = InfoApplicationAttachments(
+            application=application,
+            info=f"Информация добавлена пользователем {user.name} {timezone.make_aware(datetime.now()).strftime('%Y.%m.%d %H:%M')}",
             number_in_order=application.total_attachments + 1,
         )
 

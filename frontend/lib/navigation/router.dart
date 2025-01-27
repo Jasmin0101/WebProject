@@ -147,6 +147,7 @@ final GoRouter router = GoRouter(
       pageBuilder: (context, state) => FadeTransitionPage(
         key: state.pageKey,
         child: AdminPage(
+          key: UniqueKey(),
           status: state.uri.queryParameters[QueriesName.applicationsStatus],
         ),
       ),

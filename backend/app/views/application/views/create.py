@@ -7,7 +7,7 @@ from django.views.decorators.http import require_http_methods
 
 from app.decorator import require_login
 from app.models import Application, InfoApplicationAttachments, User
-
+from django.utils import timezone
 
 @require_login
 @require_http_methods(["POST"])
@@ -29,7 +29,7 @@ def create_application(request: HttpRequest, user: User) -> HttpResponse:
 
     new_info_attachment = InfoApplicationAttachments(
         application=application,
-        info=f"Заявка создана {datetime.now().strftime('%Y.%m.%d %H:%M')}",
+        info=f"Заявка создана {timezone.make_aware(datetime.now()).strftime('%Y.%m.%d %H:%M')}",
         number_in_order=1,
     )
 

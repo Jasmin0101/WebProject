@@ -2,6 +2,7 @@ import json
 from datetime import datetime
 
 from django.http import HttpRequest, HttpResponse, HttpResponseBadRequest, JsonResponse
+from django.utils import timezone
 from django.views.decorators.csrf import csrf_exempt
 from django.views.decorators.http import require_http_methods
 
@@ -32,10 +33,13 @@ def close_application(request: HttpRequest, user: User) -> HttpResponse:
     if user.status != UserStatus.ADMIN and application.author != user:
         return HttpResponseBadRequest("ACCESS_DENIED")
 
+    if application.status == ApplicationStatus.COMPLETED:
+        return HttpResponseBadRequest("APPLICATION_ALREADY_COMPLETED")
+
     if user.status == UserStatus.ADMIN:
         new_info_attachment = InfoApplicationAttachments(
             application=application,
-            info=f"Заявка закрыта администратором {datetime.now().strftime('%Y.%m.%d %H:%M')}",
+            info=f"Заявка закрыта администратором {timezone.make_aware(datetime.now()).strftime('%Y.%m.%d %H:%M')}",
             number_in_order=application.total_attachments + 1,
         )
 
@@ -49,7 +53,7 @@ def close_application(request: HttpRequest, user: User) -> HttpResponse:
 
     new_info_attachment = InfoApplicationAttachments(
         application=application,
-        info=f"Заявка закрыта пользователем {datetime.now().strftime('%Y.%m.%d %H:%M')}",
+        info=f"Заявка закрыта пользователем {timezone.make_aware(datetime.now()).strftime('%Y.%m.%d %H:%M')}",
         number_in_order=application.total_attachments + 1,
     )
 

@@ -97,5 +97,6 @@ def view_application(request: HttpRequest, user: User) -> HttpResponse:
             "status": application.status,
             "title": application.title,
             "author": application.author.id,
+            "total_attachments": application.total_attachments,
         },
     )
