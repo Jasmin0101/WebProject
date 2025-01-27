@@ -2,6 +2,7 @@ import json
 from datetime import datetime
 
 from django.http import HttpRequest, HttpResponse, HttpResponseBadRequest, JsonResponse
+from django.utils import timezone
 from django.views.decorators.csrf import csrf_exempt
 from django.views.decorators.http import require_http_methods
 
@@ -32,9 +33,15 @@ def info_req_application(request: HttpRequest, user: User) -> HttpResponse:
     if user.status != UserStatus.ADMIN:
         return HttpResponseBadRequest("ACCESS_DENIED")
 
+    if application.status == ApplicationStatus.INFORMATION_REQUIRED:
+        return HttpResponse(status=200)
+
+    if application.status == ApplicationStatus.COMPLETED:
+        return HttpResponseBadRequest("APPLICATION_ALREADY_COMPLETED")
+
     new_info_attachment = InfoApplicationAttachments(
         application=application,
-        info=f"Заявка переведена в статус 'требуется информация' {datetime.now().strftime('%Y.%m.%d %H:%M')}",
+        info=f"Заявка переведена в статус 'требуется информация' {timezone.make_aware(datetime.now()).strftime('%Y.%m.%d %H:%M')}",
         number_in_order=application.total_attachments + 1,
     )
 

@@ -14,6 +14,7 @@ from django.http import (
     HttpResponseServerError,
     JsonResponse,
 )
+from django.utils import timezone
 from django.views.decorators.csrf import csrf_exempt
 from django.views.decorators.http import require_http_methods
 from PIL import Image
@@ -21,6 +22,7 @@ from PIL import Image
 from app.decorator import require_login
 from app.models import (
     Application,
+    ApplicationStatus,
     FileApplicationAttachments,
     InfoApplicationAttachments,
     TextApplicationAttachments,
@@ -47,6 +49,9 @@ def add_file_attachments(
     if user.status != UserStatus.ADMIN and application.author != user:
         return HttpResponseNotAllowed("ACCESS_DENIED")
 
+    if application.status == ApplicationStatus.COMPLETED:
+        return HttpResponseBadRequest("APPLICATION_ALREADY_COMPLETED")
+
     try:
         new_file = FileApplicationAttachments(
             file=request.FILES["file"],
@@ -57,8 +62,25 @@ def add_file_attachments(
 
         application.total_attachments += 1
 
+        if (
+            user == application.author
+            and application.status == ApplicationStatus.INFORMATION_REQUIRED
+        ):
+
+            new_info_attachment = InfoApplicationAttachments(
+                application=application,
+                info=f"Информация добавлена пользователем {user.name} {timezone.make_aware(datetime.now()).strftime('%Y.%m.%d %H:%M')}",
+                number_in_order=application.total_attachments + 1,
+            )
+
+            application.status = ApplicationStatus.WORKING
+            application.total_attachments += 1
+
+            new_info_attachment.save()
+
         application.save()
         new_file.save()
+
         return HttpResponse()
 
     except Exception as e:
