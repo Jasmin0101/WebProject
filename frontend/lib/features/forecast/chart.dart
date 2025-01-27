@@ -40,8 +40,7 @@ class _ChartForecastState extends State<ChartForecast> {
       if (response.isSuccessful) {
         final responseData = response.body['forecasts'] as List<dynamic>;
         setState(() {
-          _data =
-              responseData.map((e) => e['temperature'].toInt() as int).toList();
+          _data = responseData.map((e) => e.toInt() as int).toList();
           _isLoading = false;
         });
       } else {

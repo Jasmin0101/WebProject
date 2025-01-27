@@ -1,11 +1,14 @@
 from django.urls import include, path
+from django.views.generic import TemplateView
 
 import app.views.city as city
 import app.views.parser as parser
 import app.views.user as user
-from app.views import auth, forecast
+from app.views import _forecast, auth
 from app.views.application.urls import application_patterns
-from django.views.generic import TemplateView
+from app.views.forecast.today import today
+from app.views.forecast.today24 import today24
+from app.views.forecast.week import week
 
 urlpatterns = [
     path(
@@ -50,17 +53,17 @@ urlpatterns = [
     ),
     path(
         "forecast/today",
-        forecast.today,
+        today,
         name="today",
     ),
     path(
         "forecast/week",
-        forecast.week,
+        week,
         name="week",
     ),
     path(
         "forecast/today24",
-        forecast.today24,
+        today24,
         name="today24",
     ),
     path(
